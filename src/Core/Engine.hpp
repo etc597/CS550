@@ -1,7 +1,9 @@
 #ifndef Core_Engine_hpp
 #define Core_Engine_hpp
 
-class Engine
+#include "Core/EventHandler.hpp"
+
+class Engine : public EventHandler
 {
 public:
   Engine(int argc, char* argv[]);
