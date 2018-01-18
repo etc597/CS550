@@ -16,7 +16,7 @@ float lastFrame = 0;
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-int main()
+int main(int argc, char* argv[])
 {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

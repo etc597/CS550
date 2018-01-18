@@ -1,5 +1,5 @@
-#ifndef UTILITIES_HPP
-#define UTILITIES_HPP
+#ifndef Utilities_hpp
+#define Utilities_hpp
 
 #define UNUSED(...) (void)__VA_ARGS__;
 
