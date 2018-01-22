@@ -53,7 +53,7 @@ bool GraphicsSystem::Init()
     return false;
   }
 
-  glViewport(0, 0, 800, 600);
+  glViewport(0, 0, mScreenWidth, mScreenHeight);
   glfwSetFramebufferSizeCallback(mWindow, framebufferSizeCallback);
 
   glEnable(GL_DEPTH_TEST);
