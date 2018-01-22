@@ -1,6 +1,8 @@
 #include "Engine.hpp"
 
 Engine::Engine(int argc, char * argv[])
+  : mGraphics(this)
+  , mShouldQuit(false)
 {
 }
 
@@ -8,19 +10,39 @@ Engine::~Engine()
 {
 }
 
+bool Engine::Init()
+{
+  if (!mGraphics.Init()) {
+    return false;
+  }
+
+  return true;
+}
+
 void Engine::Run()
 {
-  while (ShouldRun()) 
+  while (!ShouldQuit()) 
   {
     Update();
   }
 }
 
-void Engine::Update()
+void Engine::Quit()
 {
+  mShouldQuit = true;
 }
 
-bool Engine::ShouldRun()
+void Engine::Deinit()
 {
-  return false;
+  mGraphics.Deinit();
+}
+
+void Engine::Update()
+{
+  mGraphics.Update();
+}
+
+bool Engine::ShouldQuit()
+{
+  return mShouldQuit;
 }
