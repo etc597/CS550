@@ -12,6 +12,8 @@ public:
   void Run();
   void Quit();
   void Deinit();
+
+  GraphicsSystem* GetGraphicsSystem();
 private:
   void Update();
   bool ShouldQuit();

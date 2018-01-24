@@ -38,6 +38,11 @@ void Engine::Deinit()
   mGraphics.Deinit();
 }
 
+GraphicsSystem * Engine::GetGraphicsSystem()
+{
+  return &mGraphics;
+}
+
 void Engine::Update()
 {
   mGraphics.Update();
