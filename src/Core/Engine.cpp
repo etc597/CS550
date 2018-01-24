@@ -1,4 +1,5 @@
 #include "Engine.hpp"
+#include "Editor/EditorSystem.hpp"
 
 Engine::Engine(int argc, char * argv[])
   : mGraphics(this)
@@ -12,7 +13,7 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
-  if (!mGraphics.Init()) {
+  if (!mGraphics.Init(new EditorSystem(this))) {
     return false;
   }
 

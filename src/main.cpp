@@ -7,6 +7,7 @@ int main(int argc, char* argv[])
 
   if (!engine.Init()) 
   {
+    engine.Deinit();
     return -1;
   }
 

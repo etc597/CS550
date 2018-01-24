@@ -8,6 +8,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include "Core/Engine.hpp"
+#include "Editor/EditorSystem.hpp"
 #include "Utilities.hpp"
 
 static GraphicsSystem* gGraphicsSystem = nullptr;
@@ -19,6 +20,7 @@ void framebufferSizeCallback(GLFWwindow * window, int width, int height)
 
 GraphicsSystem::GraphicsSystem(Engine * engine)
   : mEngine(engine)
+  , mEditor(nullptr)
   , mWindow(nullptr)
   , mScreenWidth(800)
   , mScreenHeight(600)
@@ -26,13 +28,14 @@ GraphicsSystem::GraphicsSystem(Engine * engine)
 {
 }
 
-bool GraphicsSystem::Init()
+bool GraphicsSystem::Init(EditorSystem * editor)
 {
   if (gGraphicsSystem) {
     std::cout << "Attempting to create multiple graphics systems, not allowed" << std::endl;
     return false;
   }
   gGraphicsSystem = this;
+  mEditor = editor;
 
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -45,7 +48,10 @@ bool GraphicsSystem::Init()
     glfwTerminate();
     return false;
   }
-  ImGui_ImplGlfwGL3_Init(mWindow, true);
+
+  if (mEditor) {
+    mEditor->Init(mWindow);
+  }
   glfwMakeContextCurrent(mWindow);
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -62,7 +68,6 @@ bool GraphicsSystem::Init()
 
 float GraphicsSystem::Update()
 {
-  ImGui_ImplGlfwGL3_NewFrame();
   float currentFrame = (float)glfwGetTime();
   float dt = (currentFrame - mLastFrame);
 
@@ -79,7 +84,9 @@ float GraphicsSystem::Update()
   glClearColor(0.1f, 0.4f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  ImGui::Render();
+  if (mEditor) {
+    mEditor->Update();
+  }
 
   glfwSwapBuffers(mWindow);
   glfwPollEvents();
@@ -94,6 +101,10 @@ void GraphicsSystem::Deinit()
   ImGui_ImplGlfwGL3_Shutdown();
   glfwTerminate();
   gGraphicsSystem = nullptr;
+  if (mEditor) {
+    mEditor->Deinit();
+    delete mEditor;
+  }
 }
 
 void GraphicsSystem::FramebufferSizeCallback(GLFWwindow * window, int width, int height)

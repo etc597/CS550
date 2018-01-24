@@ -3,12 +3,13 @@
 
 struct GLFWwindow;
 class Engine;
+class EditorSystem;
 
 class GraphicsSystem
 {
 public:
   GraphicsSystem(Engine * engine);
-  bool Init();
+  bool Init(EditorSystem * editorSystem);
   float Update();
   void Deinit();
 
@@ -17,6 +18,7 @@ private:
   void ProcessInput(GLFWwindow * window);
 
   Engine * mEngine;
+  EditorSystem * mEditor;
   GLFWwindow * mWindow;
   int mScreenWidth;
   int mScreenHeight;
