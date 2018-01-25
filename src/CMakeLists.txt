@@ -20,6 +20,8 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 include_directories(${dep_root}/glad/include)
 include_directories(${dep_root}/imgui)
+include_directories(${dep_root}/glm-0.9.8.0)
+include_directories(${dep_root}/stb)
 
 add_executable(${PROJECT_NAME} ${source_group} ${include_group})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
