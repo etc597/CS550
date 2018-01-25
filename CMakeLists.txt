@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6.0)
-project(CS550_Physics_Simulation)
+project(physics-sim)
 
 set(root ${CMAKE_CURRENT_SOURCE_DIR})
 set(bin_root ${root}/bin)
