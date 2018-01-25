@@ -5,7 +5,7 @@ class RigidBody
 {
 public:
   RigidBody();
-  void Update();
+  void Update(float dt);
 private:
 };
 
