@@ -1,14 +1,14 @@
 #include <iostream>
 #include <fstream>
-#include <stb_image_aug.h>
 
-#include <GL/glew.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
-#include <SOIL.h>
 
 #include "Model.hpp"
 
@@ -221,6 +221,7 @@ namespace ELBA
     else
     {
       std::cout << "BMP Texture could not be loaded." << std::endl;
+      return 0;
     }
 
   }
