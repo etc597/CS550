@@ -12,6 +12,7 @@ public:
   void Update();
   void Deinit();
 private:
+  void RewindPausePlayBar();
   Engine * mEngine;
 };
 

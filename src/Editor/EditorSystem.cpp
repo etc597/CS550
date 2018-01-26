@@ -1,4 +1,7 @@
 #include "EditorSystem.hpp"
+
+#include "Core/Engine.hpp"
+
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
@@ -17,14 +20,41 @@ void EditorSystem::Update()
   ImGui_ImplGlfwGL3_NewFrame();
 
   bool open = true;
-  ImGui::ShowTestWindow(&open);
-  //ImGui::Begin("Physics Sim", &open);
+  //ImGui::ShowTestWindow(&open);
+  ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+  ImGui::Begin("Physics Sim", &open);
 
-  //ImGui::End();
+  RewindPausePlayBar();
+
+  ImGui::End();
 
   ImGui::Render();
 }
 
 void EditorSystem::Deinit()
 {
+}
+
+void EditorSystem::RewindPausePlayBar()
+{
+  if (ImGui::Button("<<")) {
+    mEngine->Rewind();
+  }
+  if (ImGui::IsItemHovered()) {
+    ImGui::SetTooltip("Rewind");
+  }
+  ImGui::SameLine();
+  if (ImGui::Button("||")) {
+    mEngine->Pause();
+  }
+  if (ImGui::IsItemHovered()) {
+    ImGui::SetTooltip("Pause");
+  }
+  ImGui::SameLine();
+  if (ImGui::Button(" >")) {
+    mEngine->Play();
+  }
+  if (ImGui::IsItemHovered()) {
+    ImGui::SetTooltip("Play");
+  }
 }
