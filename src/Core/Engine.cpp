@@ -4,7 +4,8 @@
 #include <iostream>
 
 Engine::Engine(int argc, char * argv[])
-  : mGraphics(this)
+  : mState(State::Pause)
+  , mGraphics(this)
   , mPhysics(this)
   , mShouldQuit(false)
 {
@@ -43,6 +44,8 @@ bool Engine::Init()
     return false;
   }
 
+  Cache();
+
   return true;
 }
 
@@ -63,6 +66,21 @@ void Engine::Deinit()
 {
   mGraphics.Deinit();
   mPhysics.Deinit();
+}
+
+void Engine::Play()
+{
+  mState = State::Play;
+}
+
+void Engine::Pause()
+{
+  mState = State::Pause;
+}
+
+void Engine::Rewind()
+{
+  mState = State::Rewind;
 }
 
 bool Engine::CreateObject(const ObjectData& obj, const RigidBodyData& data)
@@ -103,7 +121,49 @@ PhysicsSystem * Engine::GetPhysicsSystem()
 void Engine::Update()
 {
   float dt = mGraphics.Update();
-  mPhysics.Update(dt);
+
+  switch (mState) {
+  case State::Pause:
+    break;
+  case State::Play:
+    mPhysics.Update(dt);
+    Cache();
+    break;
+  case State::Rewind:
+    RewindUpdate();
+    break;
+  default:
+    std::cout << "Engine in unknown state, aborting" << std::endl;
+    Quit();
+    break;
+  }
+}
+
+void Engine::Cache()
+{
+  FrameData frameData;
+  for (auto& obj : mObjects) {
+    frameData.mData.insert(std::make_pair(&obj, obj.mRigidBody->GetState()));
+  }
+}
+
+void Engine::RewindUpdate()
+{
+  if (mFrameData.empty()) {
+    mState = State::Pause;
+    Cache();
+  }
+  else {
+    auto frameData = mFrameData.top();
+    mFrameData.pop();
+
+    for (auto& obj : mObjects) {
+      auto it = frameData.mData.find(&obj);
+      if (it != frameData.mData.end()) {
+        obj.mRigidBody->SetState(it->second);
+      }
+    }
+  }
 }
 
 bool Engine::ShouldQuit()

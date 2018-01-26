@@ -21,6 +21,9 @@ public:
   void Run();
   void Quit();
   void Deinit();
+  void Play();
+  void Pause();
+  void Rewind();
 
   bool CreateObject(const ObjectData& obj, const RigidBodyData& data);
   void DeleteObject(const std::string& objName);
@@ -29,9 +32,20 @@ public:
   GraphicsSystem* GetGraphicsSystem();
   PhysicsSystem* GetPhysicsSystem();
 private:
+  enum class State
+  {
+    Pause,
+    Play,
+    Rewind,
+    Count
+  };
+
   void Update();
+  void Cache();
+  void RewindUpdate();
   bool ShouldQuit();
 
+  State mState;
   GraphicsSystem mGraphics;
   PhysicsSystem mPhysics;
   std::vector<Object> mObjects;

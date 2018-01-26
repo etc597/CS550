@@ -29,6 +29,8 @@ RigidBody::RigidBody(const RigidBodyData & data)
   , force(data.force)
   , mass(data.mass)
 {
+  ApplyForce(force);
+  ApplyTorque(torque);
 }
 
 bool RigidBody::Init(Object * object)
@@ -56,6 +58,9 @@ void RigidBody::Update(float dt)
 {
   glm::mat3 R(glm::normalize(q)); // orientation matrix
   glm::mat3 Iinv = R * glm::inverse(Ibody) * glm::transpose(R);
+
+  force = glm::vec3(0);
+  torque = glm::vec3(0);
 
   // take in applied torques
   for (auto& t : mAppliedTorques) {
@@ -86,9 +91,6 @@ void RigidBody::Update(float dt)
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
   glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
   q += qdot * dt + 0.5f * qdotdot * dt * dt;
-
-  force = glm::vec3(0);
-  torque = glm::vec3(0);
 }
 
 void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
@@ -104,6 +106,30 @@ void RigidBody::ApplyForce(glm::vec3 force)
 void RigidBody::ApplyTorque(glm::vec3 torque)
 {
   mAppliedTorques.push_back(torque);
+}
+
+void RigidBody::SetState(const RigidBodyData & data)
+{
+  x = data.x;
+  q = data.q;
+  P = data.P;
+  L = data.L;
+  torque = data.torque;
+  force = data.force;
+  mass = data.mass;
+}
+
+RigidBodyData RigidBody::GetState()
+{
+  RigidBodyData data;
+  data.x = x;
+  data.q = q;
+  data.P = P;
+  data.L = L;
+  data.torque = torque;
+  data.force = force;
+  data.mass = mass;
+  return data;
 }
 
 glm::mat4 RigidBody::GetModelMatrix()
