@@ -8,6 +8,7 @@ namespace ELBA {
 }
 class RigidBody;
 struct RigidBodyData;
+class Engine;
 
 struct ObjectData
 {
@@ -18,9 +19,10 @@ struct ObjectData
 class Object
 {
 public:
-  Object();
-  bool Init(const RigidBodyData& data);
+  Object(Engine * engine);
+  bool Init(const ObjectData& obj, const RigidBodyData& data);
 
+  Engine * mEngine;
   std::string mName;
   ELBA::Model *  mModel;
   RigidBody * mRigidBody;
