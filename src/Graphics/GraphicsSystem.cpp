@@ -4,9 +4,13 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Core/Engine.hpp"
 #include "Editor/EditorSystem.hpp"
@@ -111,6 +115,37 @@ float GraphicsSystem::Update()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   mShaders[0].UseShaderProgram();
+
+  // TODO: Remove this temp draw code
+  glm::vec3 pos(0, -6.0f, 0);
+  glm::vec3 scale(0.2f, 0.2f, 0.2f);
+  glm::vec3 rotate(0, 0, 0);
+
+  glm::mat4 model;
+  model = glm::scale(model, scale);
+  model = glm::rotate(model, rotate.x, glm::vec3(1, 0, 0));
+  model = glm::rotate(model, rotate.y, glm::vec3(0, 1, 0));
+  model = glm::rotate(model, rotate.z, glm::vec3(0, 0, 1));
+  model = glm::translate(model, pos);
+  unsigned int modelLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "model");
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+  // This stuff down here is probs fine
+  glm::mat4 view;
+  view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
+  unsigned int viewLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "view");
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+  // same wiht me
+  glm::mat4 projection;
+  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
+  unsigned int projLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "projection");
+  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+  auto it = mModels.find("cube");
+  if (it != mModels.end()) {
+    it->second.Draw(&mShaders[0]);
+  }
 
   if (mEditor) {
     mEditor->Update();
