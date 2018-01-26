@@ -3,6 +3,7 @@
 
 Engine::Engine(int argc, char * argv[])
   : mGraphics(this)
+  , mPhysics(this)
   , mShouldQuit(false)
 {
 }
@@ -14,6 +15,10 @@ Engine::~Engine()
 bool Engine::Init()
 {
   if (!mGraphics.Init(new EditorSystem(this))) {
+    return false;
+  }
+
+  if (!mPhysics.Init()) {
     return false;
   }
 
@@ -36,6 +41,7 @@ void Engine::Quit()
 void Engine::Deinit()
 {
   mGraphics.Deinit();
+  mPhysics.Deinit();
 }
 
 GraphicsSystem * Engine::GetGraphicsSystem()
@@ -43,9 +49,15 @@ GraphicsSystem * Engine::GetGraphicsSystem()
   return &mGraphics;
 }
 
+PhysicsSystem * Engine::GetPhysicsSystem()
+{
+  return &mPhysics;
+}
+
 void Engine::Update()
 {
-  mGraphics.Update();
+  float dt = mGraphics.Update();
+  mPhysics.Update(dt);
 }
 
 bool Engine::ShouldQuit()

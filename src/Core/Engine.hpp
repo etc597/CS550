@@ -2,6 +2,7 @@
 #define Core_Engine_hpp
 
 #include "Graphics/GraphicsSystem.hpp"
+#include "Physics/PhysicsSystem.hpp"
 
 class Engine
 {
@@ -14,11 +15,13 @@ public:
   void Deinit();
 
   GraphicsSystem* GetGraphicsSystem();
+  PhysicsSystem* GetPhysicsSystem();
 private:
   void Update();
   bool ShouldQuit();
 
   GraphicsSystem mGraphics;
+  PhysicsSystem mPhysics;
   bool mShouldQuit;
 };
 
