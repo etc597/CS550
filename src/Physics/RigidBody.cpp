@@ -57,11 +57,21 @@ void RigidBody::Update(float dt)
   glm::mat3 R(glm::normalize(q)); // orientation matrix
   glm::mat3 Iinv = R * glm::inverse(Ibody) * glm::transpose(R);
 
-  torque = glm::vec3(0);
-  for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
-    torque += glm::cross(r - x, force);
+  // take in applied torques
+  for (auto& t : mAppliedTorques) {
+    torque += t;
   }
+
+  // take in applied forces
+  for (auto& aF : mAppliedForces) {
+    torque += glm::cross(aF.pos - x, aF.force);
+    force += aF.force;
+  }
+
+  //for (auto& vertex : mModel->mMeshes.front().mVertices) {
+  //  glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
+  //  torque += glm::cross(r - x, force);
+  //}
 
   P = P + force * dt;
   v = P / mass;
@@ -78,6 +88,7 @@ void RigidBody::Update(float dt)
   q += qdot * dt + 0.5f * qdotdot * dt * dt;
 
   force = glm::vec3(0);
+  torque = glm::vec3(0);
 }
 
 void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
