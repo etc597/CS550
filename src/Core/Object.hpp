@@ -14,6 +14,7 @@ struct ObjectData
 {
   std::string mName;
   std::string mModelName;
+  glm::vec3 mColor;
 };
 
 class Object
@@ -23,9 +24,10 @@ public:
   bool Init(const ObjectData& obj, const RigidBodyData& data);
   void Deinit();
   Engine * mEngine;
-  std::string mName;
   ELBA::Model *  mModel;
   RigidBody * mRigidBody;
+  std::string mName;
+  glm::vec3 mColor;
 };
 
 #endif

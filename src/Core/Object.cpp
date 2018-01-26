@@ -4,12 +4,17 @@
 
 Object::Object(Engine * engine)
   : mEngine(engine)
+  , mModel(nullptr)
+  , mRigidBody(nullptr)
+  , mName()
+  , mColor()
 {
 
 }
 
 bool Object::Init(const ObjectData& obj, const RigidBodyData& data)
 {
+  mColor = obj.mColor;
   if (!mEngine) {
     std::cout << "Can't have an object without an engine!" << std::endl;
     return false;
