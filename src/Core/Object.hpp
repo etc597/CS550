@@ -21,7 +21,7 @@ class Object
 public:
   Object(Engine * engine);
   bool Init(const ObjectData& obj, const RigidBodyData& data);
-
+  void Deinit();
   Engine * mEngine;
   std::string mName;
   ELBA::Model *  mModel;

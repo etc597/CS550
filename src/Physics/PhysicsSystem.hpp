@@ -10,7 +10,7 @@ class PhysicsSystem
 {
 public:
   PhysicsSystem(Engine * engine);
-  RigidBody* CreateRigidBody(Object* object, RigidBodyData& data);
+  RigidBody* CreateRigidBody(Object* object, const RigidBodyData& data);
   bool DeleteRigidBody(Object* object);
   bool Init();
   void Update(float dt);

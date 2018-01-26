@@ -26,4 +26,19 @@ bool Object::Init(const ObjectData& obj, const RigidBodyData& data)
     std::cout << "Invalid model name, model " << obj.mModelName << "does not exist" << std::endl;
     return false;
   }
+
+  auto physics = mEngine->GetPhysicsSystem();
+  if (!physics) {
+    std::cout << "Can't have an object without physics!" << std::endl;
+  }
+
+  mRigidBody = physics->CreateRigidBody(this, data);
+  if (!mRigidBody) {
+    std::cout << "Couldn't create a rigid body with the given data" << std::endl;
+  }
+}
+
+void Object::Deinit()
+{
+  mEngine->GetPhysicsSystem()->DeleteRigidBody(this);
 }

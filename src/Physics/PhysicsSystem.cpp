@@ -6,7 +6,7 @@ PhysicsSystem::PhysicsSystem(Engine * engine)
 {
 }
 
-RigidBody * PhysicsSystem::CreateRigidBody(Object * object, RigidBodyData & data)
+RigidBody* PhysicsSystem::CreateRigidBody(Object* object, const RigidBodyData& data)
 {
   auto pair = mBodies.insert(std::make_pair(object, RigidBody(data))); // returns iter, bool pair
   return &pair.first->second;
