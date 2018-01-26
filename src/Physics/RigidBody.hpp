@@ -42,6 +42,7 @@ public:
   void ApplyForce(glm::vec3 force, glm::vec3 pos);
   void ApplyForce(glm::vec3 force);
   void ApplyTorque(glm::vec3 torque);
+  glm::mat4 GetModelMatrix();
 private:
   ELBA::Model * mModel;
 

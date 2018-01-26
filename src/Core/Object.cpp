@@ -1,5 +1,6 @@
 #include "Core/Object.hpp"
 #include "Core/Engine.hpp"
+
 #include <iostream>
 
 Object::Object(Engine * engine)
@@ -46,4 +47,9 @@ bool Object::Init(const ObjectData& obj, const RigidBodyData& data)
 void Object::Deinit()
 {
   mEngine->GetPhysicsSystem()->DeleteRigidBody(this);
+}
+
+glm::mat4 Object::GetModelMatrix()
+{
+  return mRigidBody->GetModelMatrix();
 }

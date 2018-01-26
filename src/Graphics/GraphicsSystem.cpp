@@ -115,40 +115,30 @@ float GraphicsSystem::Update()
 
   mShaders[0].UseShaderProgram();
 
-  // TODO: Remove this temp draw code
-  glm::vec3 pos(0, -6.0f, 0);
-  glm::vec3 scale(0.2f, 0.2f, 0.2f);
-  glm::vec3 rotate(0, 0, 0);
-
-  glm::mat4 model;
-  model = glm::scale(model, scale);
-  model = glm::rotate(model, rotate.x, glm::vec3(1, 0, 0));
-  model = glm::rotate(model, rotate.y, glm::vec3(0, 1, 0));
-  model = glm::rotate(model, rotate.z, glm::vec3(0, 0, 1));
-  model = glm::translate(model, pos);
-  mShaders[0].SetMat4("model", model);
-
-  // This stuff down here is probs fine
   glm::mat4 view;
   view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
   mShaders[0].SetMat4("view", view);
 
-  // same wiht me
   glm::mat4 projection;
   projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
   mShaders[0].SetMat4("projection", projection);
 
+  auto objects = mEngine->GetObjects();
+
+  // Draw objects
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  mShaders[0].SetVec3("obj_color", glm::vec3(0.5, 0.5, 0.5));
-  auto it = mModels.find("cube");
-  if (it != mModels.end()) {
-    it->second.Draw(&mShaders[0]);
+  for (auto& obj : objects) {
+    mShaders[0].SetMat4("model", obj.GetModelMatrix());
+    mShaders[0].SetVec3("obj_color", obj.mColor);
+    obj.mModel->Draw(&mShaders[0]);
   }
 
+  // Draw lines
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  mShaders[0].SetVec3("obj_color", glm::vec3(0, 0, 0));
-  if (it != mModels.end()) {
-    it->second.Draw(&mShaders[0]);
+  for (auto& obj : objects) {
+    mShaders[0].SetMat4("model", obj.GetModelMatrix());
+    mShaders[0].SetVec3("obj_color", glm::vec3(0));
+    obj.mModel->Draw(&mShaders[0]);
   }
 
   if (mEditor) {

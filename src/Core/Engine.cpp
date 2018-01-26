@@ -64,6 +64,11 @@ void Engine::DeleteObject(const std::string & objName)
   }
 }
 
+const std::vector<Object>& Engine::GetObjects()
+{
+  return mObjects;
+}
+
 GraphicsSystem * Engine::GetGraphicsSystem()
 {
   return &mGraphics;

@@ -1,9 +1,10 @@
 #include "RigidBody.hpp"
 
+#include "Core/Object.hpp"
 #include "Graphics/Model.hpp"
 using namespace ELBA;
 
-#include "Core/Object.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 glm::mat3 helper_matrix(glm::vec3 a)
 {
@@ -90,6 +91,18 @@ void RigidBody::ApplyForce(glm::vec3 force)
 void RigidBody::ApplyTorque(glm::vec3 torque)
 {
   mAppliedTorques.push_back(torque);
+}
+
+glm::mat4 RigidBody::GetModelMatrix()
+{
+  //glm::vec3 scale(0.2f, 0.2f, 0.2f);
+  glm::mat4 rotate(glm::normalize(q));
+
+  glm::mat4 model;
+  //model = glm::scale(model, scale);
+  model = rotate;
+  model = glm::translate(model, x);
+  return glm::mat4();
 }
 
 

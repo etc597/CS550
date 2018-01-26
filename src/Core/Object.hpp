@@ -2,6 +2,7 @@
 #define Core_Object_hpp
 
 #include <string>
+#include <glm/glm.hpp>
 
 namespace ELBA {
   class Model;
@@ -23,6 +24,7 @@ public:
   Object(Engine * engine);
   bool Init(const ObjectData& obj, const RigidBodyData& data);
   void Deinit();
+  glm::mat4 GetModelMatrix();
   Engine * mEngine;
   ELBA::Model *  mModel;
   RigidBody * mRigidBody;
