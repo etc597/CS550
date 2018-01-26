@@ -30,12 +30,12 @@ bool Engine::Init()
   obj.mColor = glm::vec3(0.1f, 0.1f, 0.7f);
 
   RigidBodyData data;
-  data.x = glm::vec3(0, 0, -3);
+  data.x = glm::vec3(0, 0, -1);
   data.q = glm::quat();
   data.P = glm::vec3(0);
   data.L = glm::vec3(0);
   data.torque = glm::vec3(0);
-  data.force = glm::vec3(0, 0, 0);
+  data.force = glm::vec3(0);
   data.mass = 1.0f;
 
   if (!CreateObject(obj, data)) {
