@@ -315,4 +315,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-!assets
+!assets/models/*.obj
