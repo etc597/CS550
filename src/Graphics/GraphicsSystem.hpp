@@ -26,6 +26,8 @@ public:
   void MouseCallback(GLFWwindow * window, double xpos, double ypos);
   void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
   Model* GetModel(const std::string& name);
+
+  void SetDebug(bool val);
 private:
   void ProcessInput(GLFWwindow * window, float dt);
 
@@ -39,6 +41,7 @@ private:
   fs::path mAssetPath;
   Camera mCamera;
   std::unordered_map<std::string, Model> mModels;
+  bool mDebug;
 };
 
 #endif

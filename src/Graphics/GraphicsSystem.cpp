@@ -42,6 +42,7 @@ GraphicsSystem::GraphicsSystem(Engine * engine)
   , mScreenHeight(600)
   , mLastFrame(0)
   , mShaders()
+  , mDebug(false)
 {
 }
 
@@ -227,6 +228,11 @@ Model * GraphicsSystem::GetModel(const std::string & name)
     return &it->second;
   }
   return nullptr;
+}
+
+void GraphicsSystem::SetDebug(bool val)
+{
+  mDebug = val;
 }
 
 void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)

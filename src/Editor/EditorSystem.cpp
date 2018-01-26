@@ -27,6 +27,10 @@ void EditorSystem::Update()
 
   RewindPausePlayBar();
 
+  DebugDrawCheckbox();
+
+  ObjectEditor();
+
   ImGui::End();
 
   ImGui::Render();
@@ -58,4 +62,18 @@ void EditorSystem::RewindPausePlayBar()
   if (ImGui::IsItemHovered()) {
     ImGui::SetTooltip("Play");
   }
+}
+
+void EditorSystem::DebugDrawCheckbox()
+{
+  static bool debug = false;
+  ImGui::Checkbox("Debug Draw", &debug);
+
+  mEngine->GetGraphicsSystem()->SetDebug(debug);
+}
+
+void EditorSystem::ObjectEditor()
+{
+  //static int item = -1;
+  //ImGui::Combo("Objects", item, )
 }

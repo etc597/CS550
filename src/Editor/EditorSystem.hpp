@@ -13,6 +13,8 @@ public:
   void Deinit();
 private:
   void RewindPausePlayBar();
+  void DebugDrawCheckbox();
+  void ObjectEditor();
   Engine * mEngine;
 };
 
