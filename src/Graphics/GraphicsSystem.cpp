@@ -208,14 +208,16 @@ void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos
 
 void GraphicsSystem::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
 {
-  float fov = mCamera.mFov;
-  if (fov >= 1.0f && fov <= 45.0f)
-    fov -= yoffset;
-  if (fov <= 1.0f)
-    fov = 1.0f;
-  if (fov >= 45.0f)
-    fov = 45.0f;
-  mCamera.mFov = fov;
+  if (mCamera.mMove) {
+    float fov = mCamera.mFov;
+    if (fov >= 1.0f && fov <= 45.0f)
+      fov -= yoffset;
+    if (fov <= 1.0f)
+      fov = 1.0f;
+    if (fov >= 45.0f)
+      fov = 45.0f;
+    mCamera.mFov = fov;
+  }
 }
 
 Model * GraphicsSystem::GetModel(const std::string & name)
