@@ -22,6 +22,7 @@ void EditorSystem::Update()
   bool open = true;
   //ImGui::ShowTestWindow(&open);
   ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+  ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
   ImGui::Begin("Physics Sim", &open);
 
   RewindPausePlayBar();
