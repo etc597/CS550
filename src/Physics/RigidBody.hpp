@@ -21,11 +21,23 @@ struct AppliedForce
   glm::vec3 pos;
 };
 
+struct RigidBodyData
+{
+  glm::vec3 x;
+  glm::vec3 q;
+  glm::vec3 P;
+  glm::vec3 L;
+  float mass;
+  glm::vec3 force;
+  glm::vec3 torque;
+};
+
 class RigidBody
 {
 public:
   RigidBody();
-  void Init(Object * object);
+  RigidBody(const RigidBodyData& data);
+  bool Init(Object * object);
   void Update(float dt);
   void ApplyForce(glm::vec3 force, glm::vec3 pos);
   void ApplyForce(glm::vec3 force);

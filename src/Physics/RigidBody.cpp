@@ -3,6 +3,8 @@
 #include "Graphics/Model.hpp"
 using namespace ELBA;
 
+#include "Core/Object.hpp"
+
 glm::mat3 helper_matrix(glm::vec3 a)
 {
   return glm::mat3(   0, -a.z,  a.y,
@@ -11,12 +13,26 @@ glm::mat3 helper_matrix(glm::vec3 a)
 }
 
 RigidBody::RigidBody()
+  : mModel(nullptr)
+  , mass(1.0f)
 {
 }
 
-void RigidBody::Init(Object * object)
+RigidBody::RigidBody(const RigidBodyData & data)
+  : mModel(nullptr)
+  , x(data.x)
+  , q(data.q)
+  , P(data.P)
+  , L(data.L)
+  , torque(data.torque)
+  , force(data.force)
+  , mass(data.mass)
 {
-  mModel = nullptr;
+}
+
+bool RigidBody::Init(Object * object)
+{
+  mModel = object->mModel;
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
     cm += vertex.mPos;
   }

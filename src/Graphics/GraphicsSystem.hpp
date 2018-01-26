@@ -25,6 +25,7 @@ public:
   void FramebufferSizeCallback(GLFWwindow * window, int width, int height);
   void MouseCallback(GLFWwindow * window, double xpos, double ypos);
   void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+  Model* GetModel(const std::string& name);
 private:
   void ProcessInput(GLFWwindow * window, float dt);
 

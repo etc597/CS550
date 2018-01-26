@@ -228,6 +228,15 @@ void GraphicsSystem::ScrollCallback(GLFWwindow * window, double xoffset, double 
   mCamera.mFov = fov;
 }
 
+Model * GraphicsSystem::GetModel(const std::string & name)
+{
+  auto it = mModels.find(name);
+  if (it != mModels.end()) {
+    return &it->second;
+  }
+  return nullptr;
+}
+
 void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
