@@ -44,6 +44,26 @@ void Engine::Deinit()
   mPhysics.Deinit();
 }
 
+void Engine::CreateObject(const ObjectData & obj, const RigidBodyData & data)
+{
+  mObjects.push_back(Object(this));
+  mObjects.back().Init(obj, data);
+}
+
+void Engine::DeleteObject(const std::string & objName)
+{
+  auto it = std::find_if(mObjects.begin(), mObjects.end(), [objName](const Object& obj) {
+    if (obj.mName != objName) {
+      return false;
+    }
+    return true;
+  });
+  if (it != mObjects.end()) {
+    it->Deinit();
+    mObjects.erase(it);
+  }
+}
+
 GraphicsSystem * Engine::GetGraphicsSystem()
 {
   return &mGraphics;
