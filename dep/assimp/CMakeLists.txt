@@ -1,5 +1,3 @@
-get_filename_component(parentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
-
 add_library(assimp "")
 
 include(code/CMakeLists.txt)
@@ -9,12 +7,9 @@ include(${cmake_include}/sourceGroup.cmake)
 
 target_include_directories(assimp
   PUBLIC 
-    ${parentDirectory} 
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/contrib
     ${CMAKE_CURRENT_SOURCE_DIR}/contrib/openddlparser/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/contrib/gtest
-    ${CMAKE_CURRENT_SOURCE_DIR}/contrib/gtest/include
     ${CMAKE_CURRENT_SOURCE_DIR}/contrib/rapidjson/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
