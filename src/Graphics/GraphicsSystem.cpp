@@ -10,7 +10,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "Core/Engine.hpp"
 #include "Editor/EditorSystem.hpp"
@@ -127,22 +126,27 @@ float GraphicsSystem::Update()
   model = glm::rotate(model, rotate.y, glm::vec3(0, 1, 0));
   model = glm::rotate(model, rotate.z, glm::vec3(0, 0, 1));
   model = glm::translate(model, pos);
-  unsigned int modelLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "model");
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+  mShaders[0].SetMat4("model", model);
 
   // This stuff down here is probs fine
   glm::mat4 view;
   view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
-  unsigned int viewLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "view");
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+  mShaders[0].SetMat4("view", view);
 
   // same wiht me
   glm::mat4 projection;
   projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
-  unsigned int projLoc = glGetUniformLocation(mShaders[0].GetShaderProgram(), "projection");
-  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+  mShaders[0].SetMat4("projection", projection);
 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  mShaders[0].SetVec3("obj_color", glm::vec3(0.5, 0.5, 0.5));
   auto it = mModels.find("cube");
+  if (it != mModels.end()) {
+    it->second.Draw(&mShaders[0]);
+  }
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  mShaders[0].SetVec3("obj_color", glm::vec3(0, 0, 0));
   if (it != mModels.end()) {
     it->second.Draw(&mShaders[0]);
   }
