@@ -18,7 +18,7 @@ namespace ELBA
     glm::vec3 mCameraRight;
 
     float mPitch = 0;
-    float mYaw = 0;
+    float mYaw = -90.0f;
     bool mMove = false;
     float mFov = 45.0f;
   };

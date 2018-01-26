@@ -184,18 +184,23 @@ void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos
   {
     lastX = xpos;
     lastY = ypos;
+    firstMouse = false;
   }
   if (mCamera.mMove) {
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
 
-    float sensitivity = 0.05f;
+    float sensitivity = 0.125f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-
     mCamera.mYaw += xoffset;
     mCamera.mPitch += yoffset;
+
+    if (mCamera.mPitch > 89.0f)
+      mCamera.mPitch = 89.0f;
+    if (mCamera.mPitch < -89.0f)
+      mCamera.mPitch = -89.0f;
 
     glm::vec3 front;
     front.x = cos(glm::radians(mCamera.mPitch)) * cos(glm::radians(mCamera.mYaw));
@@ -226,14 +231,23 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
 
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     mCamera.mMove = true;
+  else
+    mCamera.mMove = false;
 
-  float cameraSpeed = 2.5f * dt; // adjust accordingly
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    mCamera.mPosition += cameraSpeed * mCamera.mCameraFront;
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    mCamera.mPosition -= cameraSpeed * mCamera.mCameraFront;
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    mCamera.mPosition -= glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    mCamera.mPosition += glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+  if (mCamera.mMove) {
+    float cameraSpeed = 2.5f * dt; // adjust accordingly
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+      mCamera.mPosition += cameraSpeed * mCamera.mCameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+      mCamera.mPosition -= cameraSpeed * mCamera.mCameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+      mCamera.mPosition -= glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+      mCamera.mPosition += glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+      mCamera.mPosition += cameraSpeed * mCamera.mCameraUp;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+      mCamera.mPosition -= cameraSpeed * mCamera.mCameraUp;
+  }
+
 }
