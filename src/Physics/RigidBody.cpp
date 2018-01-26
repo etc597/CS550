@@ -48,6 +48,7 @@ bool RigidBody::Init(Object * object)
     Ibody[1][2] = Ibody[2][1] = -r.y * r.z;
   }
   Ibody *= mass;
+  return true;
 }
 
 void RigidBody::Update(float dt)
