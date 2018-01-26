@@ -145,6 +145,7 @@ void Engine::Cache()
   for (auto& obj : mObjects) {
     frameData.mData.insert(std::make_pair(&obj, obj.mRigidBody->GetState()));
   }
+  mFrameData.push(frameData);
 }
 
 void Engine::RewindUpdate()
