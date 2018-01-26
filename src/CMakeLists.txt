@@ -32,7 +32,12 @@ target_link_libraries(${PROJECT_NAME} glm)
 target_link_libraries(${PROJECT_NAME} imgui)
 target_link_libraries(${PROJECT_NAME} glad)
 
-Install(TARGETS ${PROJECT_NAME} DESTINATION ${bin_root})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${bin_root})
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC 
+$<$<NOT:$<CONFIG:PUBLISH>>:ASSET_PATH="../../../assets">)
+target_compile_definitions(${PROJECT_NAME} PUBLIC 
+$<$<CONFIG:PUBLISH>:ASSET_PATH="../assets">)
 
 sourceGroup(source_root source_group)
 sourceGroup(source_root include_group)

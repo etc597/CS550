@@ -3,6 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
+#include "fs.hpp"
 
 namespace ELBA
 {
@@ -11,7 +12,7 @@ namespace ELBA
   public:
 
     // read in shader source code and build shader
-    Shader(const char *vertPath, const char *fragPath);
+    Shader(const fs::path& path, const char * name);
 
     // activate the shader
     void UseShaderProgram();
@@ -31,6 +32,6 @@ namespace ELBA
     unsigned int mFragShader;
 
     // reads in a shader from file
-    const GLchar* ReadShader(const std::string &filename);
+    const GLchar* ReadShader(const fs::path& filename);
   };
 }

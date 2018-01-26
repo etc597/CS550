@@ -25,6 +25,7 @@ GraphicsSystem::GraphicsSystem(Engine * engine)
   , mScreenWidth(800)
   , mScreenHeight(600)
   , mLastFrame(0)
+  , mShaders()
 {
 }
 
@@ -63,6 +64,12 @@ bool GraphicsSystem::Init(EditorSystem * editor)
   glfwSetFramebufferSizeCallback(mWindow, framebufferSizeCallback);
 
   glEnable(GL_DEPTH_TEST);
+  mShaderPath = fs::current_path();
+  mShaderPath += ASSET_PATH;
+  mShaderPath += "/shaders";
+
+  mShaders.push_back(Shader(mShaderPath, "simple"));
+
   return true;
 }
 

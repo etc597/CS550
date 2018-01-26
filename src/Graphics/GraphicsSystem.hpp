@@ -1,9 +1,15 @@
 #ifndef Graphics_GraphicsSystem_hpp
 #define Graphics_GraphicsSystem_hpp
 
+#include <vector>
+#include "Graphics/Shader.hpp"
+#include "fs.hpp"
+
 struct GLFWwindow;
 class Engine;
 class EditorSystem;
+
+using namespace ELBA;
 
 class GraphicsSystem
 {
@@ -23,6 +29,8 @@ private:
   int mScreenWidth;
   int mScreenHeight;
   float mLastFrame;
+  std::vector<Shader> mShaders;
+  fs::path mShaderPath;
 };
 
 #endif

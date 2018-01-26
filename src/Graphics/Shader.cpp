@@ -8,9 +8,20 @@
 namespace ELBA
 {
 
-  Shader::Shader(const char *vertPath, const char *fragPath)
+  Shader::Shader(const fs::path& path, const char * name)
     : mShaderProgram(0), mVertShader(0), mFragShader(0)
   {
+    std::string vertName(name);
+    vertName.append(".vert");
+    std::string fragName(name);
+    fragName.append(".frag");
+
+    fs::path vertPath(path);
+    vertPath += vertName;
+    fs::path fragPath(path);
+    fragPath += fragName;
+
+
     // read in vertex shader
     const GLchar *vertexShaderSource = ReadShader(vertPath);
 
@@ -115,7 +126,7 @@ namespace ELBA
     return mFragShader;
   }
 
-  const GLchar * Shader::ReadShader(const std::string & filename)
+  const GLchar * Shader::ReadShader(const fs::path& filename)
   {
     std::string source;
     std::string line;
@@ -135,7 +146,7 @@ namespace ELBA
     }
     else
     {
-      std::cout << "Unable to open shader: " + filename << std::endl;
+      std::cout << "Unable to open shader: " << filename << std::endl;
     }
 
     char *sourceChar = new char[source.size()];
