@@ -23,7 +23,7 @@ void RigidBody::Init(Object * object)
   cm /= mModel->mMeshes.front().mVertices.size();
 
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    glm::vec3 r = vertex.mPos - cm;
+    glm::vec3 r = vertex.mPos;
     Ibody[0][0] += r.y * r.y + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.y * r.y;
@@ -58,6 +58,21 @@ void RigidBody::Update(float dt)
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
   glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
   q += qdot * dt + 0.5f * qdotdot * dt * dt;
+}
+
+void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
+{
+  mAppliedForces.push_back(AppliedForce(force, pos));
+}
+
+void RigidBody::ApplyForce(glm::vec3 force)
+{
+  ApplyForce(force, x);
+}
+
+void RigidBody::ApplyTorque(glm::vec3 torque)
+{
+  mAppliedTorques.push_back(torque);
 }
 
 

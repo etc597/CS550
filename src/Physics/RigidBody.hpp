@@ -12,17 +12,32 @@ namespace ELBA {
   class Model;
 }
 
+struct AppliedForce
+{
+  AppliedForce(glm::vec3 f, glm::vec3 p)
+    : force(f)
+    , pos(p) { };
+  glm::vec3 force;
+  glm::vec3 pos;
+};
+
 class RigidBody
 {
 public:
   RigidBody();
   void Init(Object * object);
   void Update(float dt);
+  void ApplyForce(glm::vec3 force, glm::vec3 pos);
+  void ApplyForce(glm::vec3 force);
+  void ApplyTorque(glm::vec3 torque);
 private:
   ELBA::Model * mModel;
+
+  std::vector<AppliedForce> mAppliedForces;
+  std::vector<glm::vec3> mAppliedTorques;
+
   glm::vec3 cm;
   glm::mat3 Ibody;
-  float mass;
 
   glm::vec3 x; // position
   glm::quat q; // orientation
@@ -36,6 +51,8 @@ private:
 
   glm::vec3 force;
   glm::vec3 torque;
+
+  float mass;
 };
 
 #endif
