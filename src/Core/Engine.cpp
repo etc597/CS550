@@ -35,7 +35,7 @@ bool Engine::Init()
   data.P = glm::vec3(0);
   data.L = glm::vec3(0);
   data.torque = glm::vec3(0);
-  data.force = glm::vec3(0);
+  data.force = glm::vec3(0, 0, 0);
   data.mass = 1.0f;
 
   if (!CreateObject(obj, data)) {

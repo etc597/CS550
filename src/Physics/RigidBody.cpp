@@ -76,6 +76,8 @@ void RigidBody::Update(float dt)
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
   glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
   q += qdot * dt + 0.5f * qdotdot * dt * dt;
+
+  force = glm::vec3(0);
 }
 
 void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
@@ -102,7 +104,7 @@ glm::mat4 RigidBody::GetModelMatrix()
   //model = glm::scale(model, scale);
   model = rotate;
   model = glm::translate(model, x);
-  return glm::mat4();
+  return model;
 }
 
 
