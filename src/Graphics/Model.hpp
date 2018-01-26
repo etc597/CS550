@@ -20,9 +20,9 @@ namespace ELBA
 
     void Draw(Shader *aShader);
 
-  private:
-
     std::vector<Mesh> mMeshes;
+
+  private:
 
     std::vector<Texture> mLoadedTextures;
 

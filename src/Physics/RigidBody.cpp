@@ -1,8 +1,14 @@
 #include "RigidBody.hpp"
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/euler_angles.hpp>
 
 #include "Graphics/Model.hpp"
+using namespace ELBA;
+
+glm::mat3 helper_matrix(glm::vec3 a)
+{
+  return glm::mat3(   0, -a.z,  a.y,
+                    a.z,    0, -a.x,
+                   -a.y,  a.x,    0);
+}
 
 RigidBody::RigidBody()
 {
@@ -10,10 +16,48 @@ RigidBody::RigidBody()
 
 void RigidBody::Init(Object * object)
 {
+  mModel = nullptr;
+  for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    cm += vertex.mPos;
+  }
+  cm /= mModel->mMeshes.front().mVertices.size();
+
+  for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    glm::vec3 r = vertex.mPos - cm;
+    Ibody[0][0] += r.y * r.y + r.z * r.z;
+    Ibody[1][1] += r.x * r.x + r.z * r.z;
+    Ibody[1][1] += r.x * r.x + r.y * r.y;
+    Ibody[0][1] = Ibody[1][0] = -r.x * r.y;
+    Ibody[0][2] = Ibody[2][0] = -r.x * r.z;
+    Ibody[1][2] = Ibody[2][1] = -r.y * r.z;
+  }
+  Ibody *= mass;
 }
 
 void RigidBody::Update(float dt)
 {
+  glm::mat3 R(glm::normalize(q)); // orientation matrix
+  glm::mat3 Iinv = R * glm::inverse(Ibody) * glm::transpose(R);
+
+  torque = glm::vec3(0);
+  for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
+    torque += glm::cross(r - x, force);
+  }
+
+  P = P + force * dt;
+  v = P / mass;
+  a = force / mass;
+
+  L = L + torque * dt;
+  w = Iinv * L;
+  wp = Iinv * torque;
+
+  x = x + v * dt + 0.5f * a * dt * dt;
+
+  glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
+  glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
+  q += qdot * dt + 0.5f * qdotdot * dt * dt;
 }
 
 
