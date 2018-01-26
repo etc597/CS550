@@ -15,9 +15,9 @@
 
 namespace ELBA
 {
-  Model::Model(char * aPath)
+  Model::Model(fs::path aPath)
   {
-    LoadModel(aPath);
+    LoadModel(aPath.generic_string());
   }
 
   void Model::Draw(Shader *aShader)

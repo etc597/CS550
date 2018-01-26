@@ -16,7 +16,7 @@ namespace ELBA
   {
   public:
 
-    Model(char *aPath);
+    Model(fs::path aPath);
 
     void Draw(Shader *aShader);
 

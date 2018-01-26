@@ -35,7 +35,7 @@ target_link_libraries(${PROJECT_NAME} glad)
 install(TARGETS ${PROJECT_NAME} DESTINATION ${bin_root})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC 
-$<$<NOT:$<CONFIG:PUBLISH>>:ASSET_PATH="../../../assets">)
+$<$<NOT:$<CONFIG:PUBLISH>>:ASSET_PATH="../../assets">)
 target_compile_definitions(${PROJECT_NAME} PUBLIC 
 $<$<CONFIG:PUBLISH>:ASSET_PATH="../assets">)
 

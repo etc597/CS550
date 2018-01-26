@@ -6,16 +6,29 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/glm.hpp>
 
 #include "Core/Engine.hpp"
 #include "Editor/EditorSystem.hpp"
 #include "Utilities.hpp"
 
 static GraphicsSystem* gGraphicsSystem = nullptr;
+static bool firstMouse = true;
+double lastX = 0, lastY = 0;
 
 void framebufferSizeCallback(GLFWwindow * window, int width, int height)
 {
   gGraphicsSystem->FramebufferSizeCallback(window, width, height);
+}
+
+void mouseCallback(GLFWwindow* window, double xpos, double ypos)
+{
+  gGraphicsSystem->MouseCallback(window, xpos, ypos);
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+  gGraphicsSystem->ScrollCallback(window, xoffset, yoffset);
 }
 
 GraphicsSystem::GraphicsSystem(Engine * engine)
@@ -62,13 +75,19 @@ bool GraphicsSystem::Init(EditorSystem * editor)
 
   glViewport(0, 0, mScreenWidth, mScreenHeight);
   glfwSetFramebufferSizeCallback(mWindow, framebufferSizeCallback);
+  glfwSetCursorPosCallback(mWindow, mouseCallback);
+  glfwSetScrollCallback(mWindow, scrollCallback);
 
   glEnable(GL_DEPTH_TEST);
-  mShaderPath = fs::current_path();
-  mShaderPath += ASSET_PATH;
-  mShaderPath += "/shaders";
+  mAssetPath = fs::current_path();
+  mAssetPath /= ASSET_PATH;
 
-  mShaders.push_back(Shader(mShaderPath, "simple"));
+  mShaders.push_back(Shader(mAssetPath / "shaders", "simple"));
+
+  for (auto& file : fs::directory_iterator(mAssetPath / "models")) {
+    auto modelName = file.path().stem();
+    mModels.emplace(std::make_pair(modelName.string(), file.path()));
+  }
 
   return true;
 }
@@ -82,7 +101,7 @@ float GraphicsSystem::Update()
     dt = 0.5f;
   }
 
-  ProcessInput(mWindow);
+  ProcessInput(mWindow, dt);
 
   if (glfwWindowShouldClose(mWindow)) {
     mEngine->Quit();
@@ -90,6 +109,8 @@ float GraphicsSystem::Update()
 
   glClearColor(0.1f, 0.4f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  mShaders[0].UseShaderProgram();
 
   if (mEditor) {
     mEditor->Update();
@@ -122,8 +143,62 @@ void GraphicsSystem::FramebufferSizeCallback(GLFWwindow * window, int width, int
   glViewport(0, 0, width, height);
 }
 
-void GraphicsSystem::ProcessInput(GLFWwindow * window)
+void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos)
+{
+  if (firstMouse)
+  {
+    lastX = xpos;
+    lastY = ypos;
+  }
+  if (mCamera.mMove) {
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+
+    float sensitivity = 0.05f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+
+    mCamera.mYaw += xoffset;
+    mCamera.mPitch += yoffset;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(mCamera.mPitch)) * cos(glm::radians(mCamera.mYaw));
+    front.y = sin(glm::radians(mCamera.mPitch));
+    front.z = cos(glm::radians(mCamera.mPitch)) * sin(glm::radians(mCamera.mYaw));
+    mCamera.mCameraFront = glm::normalize(front);
+  }
+  lastX = xpos;
+  lastY = ypos;
+}
+
+void GraphicsSystem::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
+{
+  float fov = mCamera.mFov;
+  if (fov >= 1.0f && fov <= 45.0f)
+    fov -= yoffset;
+  if (fov <= 1.0f)
+    fov = 1.0f;
+  if (fov >= 45.0f)
+    fov = 45.0f;
+  mCamera.mFov = fov;
+}
+
+void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
+
+  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    mCamera.mMove = true;
+
+  float cameraSpeed = 2.5f * dt; // adjust accordingly
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    mCamera.mPosition += cameraSpeed * mCamera.mCameraFront;
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    mCamera.mPosition -= cameraSpeed * mCamera.mCameraFront;
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    mCamera.mPosition -= glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    mCamera.mPosition += glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
 }

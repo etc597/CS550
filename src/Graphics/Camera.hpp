@@ -12,12 +12,15 @@ namespace ELBA
     Camera();
 
     glm::vec3 mPosition;
-    glm::vec3 mTarget;
-    glm::vec3 mDirection;
     glm::vec3 mWorldUp;
+    glm::vec3 mCameraFront;
     glm::vec3 mCameraUp;
     glm::vec3 mCameraRight;
 
+    float mPitch = 0;
+    float mYaw = 0;
+    bool mMove = false;
+    float mFov = 45.0f;
   };
 
 }

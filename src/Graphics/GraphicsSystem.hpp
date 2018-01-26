@@ -2,7 +2,10 @@
 #define Graphics_GraphicsSystem_hpp
 
 #include <vector>
+#include <unordered_map>
 #include "Graphics/Shader.hpp"
+#include "Graphics/Camera.hpp"
+#include "Graphics/Model.hpp"
 #include "fs.hpp"
 
 struct GLFWwindow;
@@ -20,8 +23,10 @@ public:
   void Deinit();
 
   void FramebufferSizeCallback(GLFWwindow * window, int width, int height);
+  void MouseCallback(GLFWwindow * window, double xpos, double ypos);
+  void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 private:
-  void ProcessInput(GLFWwindow * window);
+  void ProcessInput(GLFWwindow * window, float dt);
 
   Engine * mEngine;
   EditorSystem * mEditor;
@@ -30,7 +35,9 @@ private:
   int mScreenHeight;
   float mLastFrame;
   std::vector<Shader> mShaders;
-  fs::path mShaderPath;
+  fs::path mAssetPath;
+  Camera mCamera;
+  std::unordered_map<std::string, Model> mModels;
 };
 
 #endif

@@ -15,15 +15,8 @@ namespace ELBA
     vertName.append(".vert");
     std::string fragName(name);
     fragName.append(".frag");
-
-    fs::path vertPath(path);
-    vertPath += vertName;
-    fs::path fragPath(path);
-    fragPath += fragName;
-
-
     // read in vertex shader
-    const GLchar *vertexShaderSource = ReadShader(vertPath);
+    const GLchar *vertexShaderSource = ReadShader(path / vertName);
 
     // create a shader object (return value is the id)
     mVertShader = glCreateShader(GL_VERTEX_SHADER);
@@ -46,7 +39,7 @@ namespace ELBA
     }
 
     // read in fragment shader
-    const GLchar *fragmentShaderSource = ReadShader(fragPath);
+    const GLchar *fragmentShaderSource = ReadShader(path / fragName);
 
     // create a shader object
     mFragShader = glCreateShader(GL_FRAGMENT_SHADER);
