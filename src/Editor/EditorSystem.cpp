@@ -16,6 +16,12 @@ void EditorSystem::Update()
 {
   ImGui_ImplGlfwGL3_NewFrame();
 
+  bool open = true;
+  ImGui::ShowTestWindow(&open);
+  //ImGui::Begin("Physics Sim", &open);
+
+  //ImGui::End();
+
   ImGui::Render();
 }
 
