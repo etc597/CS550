@@ -1,6 +1,8 @@
 #include "Engine.hpp"
 #include "Editor/EditorSystem.hpp"
 
+#include <iostream>
+
 Engine::Engine(int argc, char * argv[])
   : mGraphics(this)
   , mPhysics(this)
@@ -19,6 +21,25 @@ bool Engine::Init()
   }
 
   if (!mPhysics.Init()) {
+    return false;
+  }
+
+  ObjectData obj;
+  obj.mName = "Default";
+  obj.mModelName = "cube";
+  obj.mColor = glm::vec3(0.1f, 0.1f, 0.7f);
+
+  RigidBodyData data;
+  data.x = glm::vec3(0, 0, -3);
+  data.q = glm::quat();
+  data.P = glm::vec3(0);
+  data.L = glm::vec3(0);
+  data.torque = glm::vec3(0);
+  data.force = glm::vec3(0);
+  data.mass = 1.0f;
+
+  if (!CreateObject(obj, data)) {
+    std::cout << "Failed to create default object, aborting" << std::endl;
     return false;
   }
 
@@ -44,10 +65,10 @@ void Engine::Deinit()
   mPhysics.Deinit();
 }
 
-void Engine::CreateObject(const ObjectData & obj, const RigidBodyData & data)
+bool Engine::CreateObject(const ObjectData& obj, const RigidBodyData& data)
 {
   mObjects.push_back(Object(this));
-  mObjects.back().Init(obj, data);
+  return mObjects.back().Init(obj, data);
 }
 
 void Engine::DeleteObject(const std::string & objName)

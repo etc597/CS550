@@ -24,7 +24,7 @@ struct AppliedForce
 struct RigidBodyData
 {
   glm::vec3 x;
-  glm::vec3 q;
+  glm::quat q;
   glm::vec3 P;
   glm::vec3 L;
   float mass;

@@ -22,7 +22,7 @@ public:
   void Quit();
   void Deinit();
 
-  void CreateObject(const ObjectData& obj, const RigidBodyData& data);
+  bool CreateObject(const ObjectData& obj, const RigidBodyData& data);
   void DeleteObject(const std::string& objName);
 
   const std::vector<Object>& GetObjects();

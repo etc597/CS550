@@ -41,7 +41,15 @@ bool Object::Init(const ObjectData& obj, const RigidBodyData& data)
   mRigidBody = physics->CreateRigidBody(this, data);
   if (!mRigidBody) {
     std::cout << "Couldn't create a rigid body with the given data" << std::endl;
+    return false;
   }
+
+  if (!mRigidBody->Init(this)) {
+    std::cout << "Failed to init the rigid body" << std::endl;
+    return false;
+  }
+
+  return true;
 }
 
 void Object::Deinit()
