@@ -53,7 +53,7 @@ bool RigidBody::Init(Object * object)
     glm::vec3 r = vertex.mPos - cm;
     Ibody[0][0] += r.y * r.y + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.z * r.z;
-    Ibody[1][1] += r.x * r.x + r.y * r.y;
+    Ibody[2][2] += r.x * r.x + r.y * r.y;
     Ibody[0][1] = (Ibody[1][0] += -r.x * r.y);
     Ibody[0][2] = (Ibody[2][0] += -r.x * r.z);
     Ibody[1][2] = (Ibody[2][1] += -r.y * r.z);
