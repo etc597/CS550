@@ -194,14 +194,7 @@ void GraphicsSystem::ScrollCallback(GLFWwindow * window, double xoffset, double 
 {
   UNUSED(xoffset);
   if (mCamera.mMove) {
-    float fov = mCamera.mFov;
-    if (fov >= 1.0f && fov <= 45.0f)
-      fov -= (float)yoffset;
-    if (fov <= 1.0f)
-      fov = 1.0f;
-    if (fov >= 45.0f)
-      fov = 45.0f;
-    mCamera.mFov = fov;
+    mCamera.mFov -= (float)yoffset;
   }
 }
 
@@ -258,7 +251,7 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
     mCamera.mMove = false;
 
   if (mCamera.mMove) {
-    float cameraSpeed = 2.5f * dt; // adjust accordingly
+    float cameraSpeed = 5.0f * dt; // adjust accordingly
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
       mCamera.mPosition += cameraSpeed * mCamera.mCameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -298,12 +291,12 @@ void GraphicsSystem::Draw()
   }
 
   // Draw lines
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  //for (auto& obj : objects) {
-  //  mShaders[0].SetMat4("model", obj.GetModelMatrix());
-  //  mShaders[0].SetVec3("obj_color", glm::vec3(0));
-  //  obj.mModel->Draw(&mShaders[0]);
-  //}
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  for (auto& obj : objects) {
+    mShaders[0].SetMat4("model", obj.GetModelMatrix());
+    mShaders[0].SetVec3("obj_color", glm::vec3(0));
+    obj.mModel->Draw(&mShaders[0]);
+  }
 }
 
 void GraphicsSystem::DebugDraw()
