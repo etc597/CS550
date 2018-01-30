@@ -140,8 +140,15 @@ void EditorSystem::ObjectEditor()
 
       glm::vec3 force = glm::vec3(f[0], f[1], f[2]);
       glm::vec3 pos = glm::vec3(p[0], p[1], p[2]);
+      glm::vec3 lineDir = glm::vec3(0);
+      float length = glm::length(force);
+      if (length != 0) {
+        lineDir = glm::normalize(force);
+      }
 
-      mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + force);
+      float s = 4 * 1.0f / (1 + std::exp((-length + 10000) / 10000));
+
+      mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir);
 
       if (ImGui::Button("Apply")) {
         obj.mRigidBody->ApplyForce(force, pos);
