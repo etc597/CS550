@@ -47,6 +47,7 @@ public:
   RigidBodyData GetState();
   glm::mat4 GetModelMatrix();
 private:
+  Object * mObject;
   Engine * mEngine;
   ELBA::Model * mModel;
 

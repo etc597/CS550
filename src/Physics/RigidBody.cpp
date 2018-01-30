@@ -15,14 +15,16 @@ glm::mat3 helper_matrix(glm::vec3 a)
 }
 
 RigidBody::RigidBody()
-  :  mEngine(nullptr)
+  : mObject(nullptr)
+  , mEngine(nullptr)
   , mModel(nullptr)
   , mass(1.0f)
 {
 }
 
 RigidBody::RigidBody(const RigidBodyData & data)
-  : mEngine(nullptr)
+  : mObject(nullptr)
+  , mEngine(nullptr)
   , mModel(nullptr)
   , x(data.x)
   , q(data.q)
@@ -38,6 +40,7 @@ RigidBody::RigidBody(const RigidBodyData & data)
 
 bool RigidBody::Init(Object * object)
 {
+  mObject = object;
   mEngine = object->mEngine;
   mModel = object->mModel;
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
@@ -46,7 +49,7 @@ bool RigidBody::Init(Object * object)
   cm /= mModel->mMeshes.front().mVertices.size();
 
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    glm::vec3 r = vertex.mPos;
+    glm::vec3 r = vertex.mPos - cm;
     Ibody[0][0] += r.y * r.y + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.y * r.y;
@@ -55,12 +58,13 @@ bool RigidBody::Init(Object * object)
     Ibody[1][2] = Ibody[2][1] = -r.y * r.z;
   }
   Ibody *= mass;
+  Update(0);
   return true;
 }
 
 void RigidBody::DebugUpdate()
 {
-  mEngine->GetGraphicsSystem()->DebugDrawLine(x, x + v);
+  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, cm, cm + glm::inverse(glm::mat3(glm::normalize(q))) * v);
 }
 
 void RigidBody::Update(float dt)
@@ -82,20 +86,21 @@ void RigidBody::Update(float dt)
     force += aF.force;
   }
 
-  //for (auto& vertex : mModel->mMeshes.front().mVertices) {
-  //  glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
-  //  torque += glm::cross(r - x, force);
-  //}
+  for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
+    torque += glm::cross(r - x, force);
+  }
 
   P = P + force * dt;
   v = P / mass;
   a = force / mass;
 
+  x = x + v * dt + 0.5f * a * dt * dt;
+
+
   L = L + torque * dt;
   w = Iinv * L;
   wp = Iinv * torque;
-
-  x = x + v * dt + 0.5f * a * dt * dt;
 
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
   glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
@@ -143,11 +148,11 @@ RigidBodyData RigidBody::GetState()
 
 glm::mat4 RigidBody::GetModelMatrix()
 {
-  //glm::vec3 scale(0.2f, 0.2f, 0.2f);
+  glm::vec3 scale(1, 1, 1);
   glm::mat4 rotate(glm::normalize(q));
 
   glm::mat4 model;
-  //model = glm::scale(model, scale);
+  model = glm::scale(model, scale);
   model = rotate;
   model = glm::translate(model, x);
   return model;
