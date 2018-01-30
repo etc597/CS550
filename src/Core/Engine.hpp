@@ -28,7 +28,9 @@ public:
   bool CreateObject(const ObjectData& obj, const RigidBodyData& data);
   void DeleteObject(const std::string& objName);
 
-  const std::vector<Object>& GetObjects();
+  const std::vector<Object>& GetObjects() const;
+  std::vector<Object>& GetObjects();
+
   GraphicsSystem* GetGraphicsSystem();
   PhysicsSystem* GetPhysicsSystem();
 private:

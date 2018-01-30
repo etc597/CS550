@@ -4,7 +4,7 @@
 #include <iostream>
 
 Engine::Engine(int argc, char * argv[])
-  : mState(State::Pause)
+  : mState(State::Play)
   , mGraphics(this)
   , mPhysics(this)
   , mShouldQuit(false)
@@ -31,10 +31,10 @@ bool Engine::Init()
   obj.mColor = glm::vec3(0.1f, 0.1f, 0.7f);
 
   RigidBodyData data;
-  data.x = glm::vec3(0, 0, -1);
+  data.x = glm::vec3(0, 0, -0.5f);
   data.q = glm::quat();
-  data.P = glm::vec3(0, 0, 1);
-  data.L = glm::vec3(0, 5, 5);
+  data.P = glm::vec3(0, 0, 0);
+  data.L = glm::vec3(0, 0, 0);
   data.torque = glm::vec3(0);
   data.force = glm::vec3(0);
   data.mass = 1.0f;
@@ -103,7 +103,12 @@ void Engine::DeleteObject(const std::string & objName)
   }
 }
 
-const std::vector<Object>& Engine::GetObjects()
+const std::vector<Object>& Engine::GetObjects() const
+{
+  return mObjects;
+}
+
+std::vector<Object>& Engine::GetObjects()
 {
   return mObjects;
 }

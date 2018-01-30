@@ -74,6 +74,58 @@ void EditorSystem::DebugDrawCheckbox()
 
 void EditorSystem::ObjectEditor()
 {
-  //static int item = -1;
-  //ImGui::Combo("Objects", item, )
+  auto& objects = mEngine->GetObjects();
+  static int item = 0;
+  static int lastItem = -1;
+  if (objects.empty()) {
+    item = -1;
+  }
+
+  ImGui::Combo("Objects", &item, [](void * data, int idx, const char **out_text)->bool {
+    auto& objects = *static_cast<std::vector<Object>*>(data);
+    *out_text = objects[idx].mName.c_str();
+    return true;
+  }, &objects, (int)objects.size());
+
+  if (item >= 0) {
+    auto& obj = objects[item];
+    float col[3];
+    for (auto i = 0; i < 3; ++i) {
+      col[i] = obj.mColor[i];
+    }
+    ImGui::ColorEdit3("Color", col);
+    for (auto i = 0; i < 3; ++i) {
+      obj.mColor[i] = col[i];
+    }
+    ImGui::Text("Object modification");
+    static float f[3] = { 0 };
+    static float p[3];
+    static bool edited = false;
+    if (lastItem != item || !edited) {
+      for (unsigned i = 0; i < 3; ++i) {
+        p[i] = obj.mRigidBody->GetPos()[i];
+      }
+    }
+    ImGui::DragFloat3("Force", f, 10.0f);
+    ImGui::DragFloat3("WorldPos", p, 0.01f);
+    if (!edited) {
+      for (unsigned i = 0; i < 3; ++i) {
+        if (p[i] != obj.mRigidBody->GetPos()[i]) {
+          edited = true;
+        }
+      }
+    }
+
+    glm::vec3 force = glm::vec3(f[0], f[1], f[2]);
+    glm::vec3 pos = glm::vec3(p[0], p[1], p[2]);
+
+    mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + force);
+
+    if (ImGui::Button("Apply")) {
+      obj.mRigidBody->ApplyForce(force, pos);
+      edited = false;
+    }
+  }
+
+  lastItem = item;
 }

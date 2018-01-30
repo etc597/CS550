@@ -46,6 +46,7 @@ public:
   void SetState(const RigidBodyData& data);
   RigidBodyData GetState();
   glm::mat4 GetModelMatrix();
+  glm::vec3 GetPos();
 private:
   Object * mObject;
   Engine * mEngine;

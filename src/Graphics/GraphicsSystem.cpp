@@ -42,7 +42,7 @@ GraphicsSystem::GraphicsSystem(Engine * engine)
   , mScreenHeight(600)
   , mLastFrame(0)
   , mShaders()
-  , mDebug(false)
+  , mDebug(true)
 {
 }
 
@@ -295,7 +295,7 @@ void GraphicsSystem::Draw()
 
 void GraphicsSystem::DebugDraw()
 {
-  auto objects = mEngine->GetObjects();
+  auto& objects = mEngine->GetObjects();
 
   for (auto& obj : objects) {
     obj.mRigidBody->DebugUpdate();

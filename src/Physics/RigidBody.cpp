@@ -90,11 +90,6 @@ void RigidBody::Update(float dt)
   }
   mAppliedForces.clear();
 
-  for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
-    torque += glm::cross(r - x, force);
-  }
-
   P = P + force * dt;
   v = P / mass;
   a = force / mass;
@@ -169,6 +164,11 @@ glm::mat4 RigidBody::GetModelMatrix()
   model *= rotate;
   model = glm::scale(model, scale);
   return model;
+}
+
+glm::vec3 RigidBody::GetPos()
+{
+  return x;
 }
 
 
