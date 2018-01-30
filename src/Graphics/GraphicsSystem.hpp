@@ -28,8 +28,12 @@ public:
   Model* GetModel(const std::string& name);
 
   void SetDebug(bool val);
+  void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2);
 private:
+  bool DebugInit();
   void ProcessInput(GLFWwindow * window, float dt);
+  void Draw();
+  void DebugDraw();
 
   Engine * mEngine;
   EditorSystem * mEditor;
@@ -42,6 +46,9 @@ private:
   Camera mCamera;
   std::unordered_map<std::string, Model> mModels;
   bool mDebug;
+  std::vector<glm::vec3> mDebugLines;
+  unsigned int mDebugVAO;
+  unsigned int mDebugVBO;
 };
 
 #endif

@@ -87,10 +87,15 @@ bool GraphicsSystem::Init(EditorSystem * editor)
   mAssetPath /= ASSET_PATH;
 
   mShaders.push_back(Shader(mAssetPath / "shaders", "simple"));
+  mShaders.push_back(Shader(mAssetPath / "shaders", "debug"));
 
   for (auto& file : fs::directory_iterator(mAssetPath / "models")) {
     auto modelName = file.path().stem();
     mModels.emplace(std::make_pair(modelName.string(), file.path()));
+  }
+
+  if (!DebugInit()) {
+    return false;
   }
 
   return true;
@@ -114,32 +119,11 @@ float GraphicsSystem::Update()
   glClearColor(0.1f, 0.4f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  mShaders[0].UseShaderProgram();
+  Draw();
 
-  glm::mat4 view;
-  view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
-  mShaders[0].SetMat4("view", view);
-
-  glm::mat4 projection;
-  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
-  mShaders[0].SetMat4("projection", projection);
-
-  auto objects = mEngine->GetObjects();
-
-  // Draw objects
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  for (auto& obj : objects) {
-    mShaders[0].SetMat4("model", obj.GetModelMatrix());
-    mShaders[0].SetVec3("obj_color", obj.mColor);
-    obj.mModel->Draw(&mShaders[0]);
-  }
-
-  // Draw lines
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  for (auto& obj : objects) {
-    mShaders[0].SetMat4("model", obj.GetModelMatrix());
-    mShaders[0].SetVec3("obj_color", glm::vec3(0));
-    obj.mModel->Draw(&mShaders[0]);
+  if (mDebug)
+  {
+    DebugDraw();
   }
 
   if (mEditor) {
@@ -235,6 +219,27 @@ void GraphicsSystem::SetDebug(bool val)
   mDebug = val;
 }
 
+void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2)
+{
+  if (mDebug) {
+    mDebugLines.push_back(p1);
+    mDebugLines.push_back(p2);
+  }
+}
+
+bool GraphicsSystem::DebugInit()
+{
+  glGenVertexArrays(1, &mDebugVAO);
+  glBindVertexArray(mDebugVAO);
+
+  glGenBuffers(1, &mDebugVBO);
+  
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+  return true;
+}
+
 void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -261,4 +266,61 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
       mCamera.mPosition -= cameraSpeed * mCamera.mCameraUp;
   }
 
+}
+
+void GraphicsSystem::Draw()
+{
+  mShaders[0].UseShaderProgram();
+
+  glm::mat4 view;
+  view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
+  mShaders[0].SetMat4("view", view);
+
+  glm::mat4 projection;
+  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
+  mShaders[0].SetMat4("projection", projection);
+
+  auto objects = mEngine->GetObjects();
+
+  // Draw objects
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  for (auto& obj : objects) {
+    mShaders[0].SetMat4("model", obj.GetModelMatrix());
+    mShaders[0].SetVec3("obj_color", obj.mColor);
+    obj.mModel->Draw(&mShaders[0]);
+  }
+
+  // Draw lines
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  for (auto& obj : objects) {
+    mShaders[0].SetMat4("model", obj.GetModelMatrix());
+    mShaders[0].SetVec3("obj_color", glm::vec3(0));
+    obj.mModel->Draw(&mShaders[0]);
+  }
+}
+
+void GraphicsSystem::DebugDraw()
+{
+  mShaders[1].UseShaderProgram();
+
+  glm::mat4 view;
+  view = glm::lookAt(mCamera.mPosition, mCamera.mPosition + mCamera.mCameraFront, mCamera.mCameraUp);
+  mShaders[1].SetMat4("view", view);
+
+  glm::mat4 projection;
+  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
+  mShaders[1].SetMat4("projection", projection);
+
+  glm::mat4 model;
+  mShaders[1].SetMat4("model", model);
+
+  mShaders[1].SetVec3("obj_color", glm::vec3(0));
+
+  glBindVertexArray(mDebugVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
+  glBufferData(GL_ARRAY_BUFFER, mDebugLines.size(), mDebugLines.data(), GL_DYNAMIC_DRAW);
+
+  glLineWidth(1.5f);
+  glDrawArrays(GL_LINES, 0, mDebugLines.size());
+  glBindVertexArray(0);
 }
