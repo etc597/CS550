@@ -165,10 +165,10 @@ void EditorSystem::ObjectEditor()
 
       glm::vec3 torque = glm::vec3(t[0], t[1], t[2]);
       glm::vec3 objPos = obj.mRigidBody->GetPos();
-
-      length = glm::length(objPos);
+      lineDir = glm::vec3(0);
+      length = glm::length(torque);
       if (length != 0) {
-        lineDir = glm::normalize(objPos);
+        lineDir = glm::normalize(torque);
       }
 
       s = 5 * 1.0f / (1 + std::exp((-length + 10000) / 10000));
