@@ -64,7 +64,7 @@ bool RigidBody::Init(Object * object)
 
 void RigidBody::DebugUpdate()
 {
-  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, cm, cm + glm::inverse(glm::mat3(glm::normalize(q))) * v);
+  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, cm, cm + v);
 }
 
 void RigidBody::Update(float dt)

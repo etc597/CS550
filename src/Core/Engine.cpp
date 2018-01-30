@@ -34,7 +34,7 @@ bool Engine::Init()
   data.x = glm::vec3(0, 0, -1);
   data.q = glm::quat();
   data.P = glm::vec3(0, 0, 1);
-  data.L = glm::vec3(0, 0, 3);
+  data.L = glm::vec3(-3, 0, 3);
   data.torque = glm::vec3(0);
   data.force = glm::vec3(0);
   data.mass = 1.0f;
