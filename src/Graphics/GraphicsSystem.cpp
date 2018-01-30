@@ -251,6 +251,10 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
 
   if (mCamera.mMove) {
     float cameraSpeed = 5.0f * dt; // adjust accordingly
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
+      cameraSpeed *= 10.0f;
+    }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
       mCamera.mPosition += cameraSpeed * mCamera.mCameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
