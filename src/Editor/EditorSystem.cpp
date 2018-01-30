@@ -118,7 +118,7 @@ void EditorSystem::ObjectEditor()
 
     if (ImGui::CollapsingHeader("Object modification")) {
       static bool showVector = true;
-      ImGui::Checkbox("Show Vector", &showVector);
+      ImGui::Checkbox("Show Vectors", &showVector);
 
       static float f[3] = { 0 };
       static float p[3];
@@ -128,7 +128,9 @@ void EditorSystem::ObjectEditor()
           p[i] = obj.mRigidBody->GetPos()[i];
         }
       }
-      ImGui::DragFloat3("Force", f, 10.0f);
+
+      // Force
+      ImGui::InputFloat3("Force", f);
       ImGui::DragFloat3("WorldPos", p, 0.01f);
       if (!edited) {
         for (unsigned i = 0; i < 3; ++i) {
@@ -148,11 +150,35 @@ void EditorSystem::ObjectEditor()
 
       float s = 4 * 1.0f / (1 + std::exp((-length + 10000) / 10000));
 
-      mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir);
+      if (showVector) {
+        mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir);
+      }
 
       if (ImGui::Button("Apply")) {
         obj.mRigidBody->ApplyForce(force, pos);
         edited = false;
+      }
+
+      // Torque
+      static float t[3];
+      ImGui::InputFloat3("Torque", t);
+
+      glm::vec3 torque = glm::vec3(t[0], t[1], t[2]);
+      glm::vec3 objPos = obj.mRigidBody->GetPos();
+
+      length = glm::length(objPos);
+      if (length != 0) {
+        lineDir = glm::normalize(objPos);
+      }
+
+      s = 5 * 1.0f / (1 + std::exp((-length + 10000) / 10000));
+
+      if (showVector) {
+        mEngine->GetGraphicsSystem()->DebugDrawLine(objPos, objPos + s * lineDir);
+      }
+      
+      if (ImGui::Button("Apply")) {
+        obj.mRigidBody->ApplyTorque(torque);
       }
     }
   }
