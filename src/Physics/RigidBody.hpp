@@ -23,6 +23,16 @@ struct AppliedForce
 
 struct RigidBodyData
 {
+  RigidBodyData() 
+  : x(0)
+  , q()
+  , P(0)
+  , L(0)
+  , mass(0.01f)
+  , force(0)
+  , torque(0) {
+
+  }
   glm::vec3 x;
   glm::quat q;
   glm::vec3 P;

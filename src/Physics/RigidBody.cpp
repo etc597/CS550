@@ -40,6 +40,7 @@ RigidBody::RigidBody(const RigidBodyData & data)
 
 bool RigidBody::Init(Object * object)
 {
+  Ibody = glm::mat4(0);
   mObject = object;
   mEngine = object->mEngine;
   mModel = object->mModel;
