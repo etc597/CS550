@@ -21,7 +21,7 @@ void EditorSystem::Update()
 
   bool open = true;
   //ImGui::ShowTestWindow(&open);
-  ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+  ImGui::SetNextWindowSize(ImVec2(250, 400), ImGuiCond_FirstUseEver);
   ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
   ImGui::Begin("Physics Sim", &open);
 
@@ -66,7 +66,7 @@ void EditorSystem::RewindPausePlayBar()
 
 void EditorSystem::DebugDrawCheckbox()
 {
-  static bool debug = false;
+  static bool debug = mEngine->GetGraphicsSystem()->GetDebug();
   ImGui::Checkbox("Debug Draw", &debug);
 
   mEngine->GetGraphicsSystem()->SetDebug(debug);
@@ -97,33 +97,56 @@ void EditorSystem::ObjectEditor()
     for (auto i = 0; i < 3; ++i) {
       obj.mColor[i] = col[i];
     }
-    ImGui::Text("Object modification");
-    static float f[3] = { 0 };
-    static float p[3];
-    static bool edited = false;
-    if (lastItem != item || !edited) {
-      for (unsigned i = 0; i < 3; ++i) {
-        p[i] = obj.mRigidBody->GetPos()[i];
+
+    if (ImGui::CollapsingHeader("Object State (Read Only)")) {
+      static bool notQuat = true;
+      ImGui::Checkbox("Quat as Euler", &notQuat);
+      auto state = obj.mRigidBody->GetState();
+      ImGui::Value("Mass", state.mass);
+      ImGui::Text("%s: %.3f %.3f %.3f", "Position", state.x[0], state.x[1], state.x[2]);
+      if (notQuat) {
+        glm::vec3 euler = glm::eulerAngles(state.q);
+        ImGui::Text("%s: %.3f %.3f %.3f", "Orientation", euler[0], euler[1], euler[2]);
       }
+      else {
+        ImGui::Text("%s: %.3f %.3f %.3f %.3f", "Orientation", state.q[0], state.q[1], state.q[2], state.q[3]);
+
+      }
+      ImGui::Text("%s: %.3f %.3f %.3f", "Linear Momentum", state.P[0], state.P[1], state.P[2]);
+      ImGui::Text("%s: %.3f %.3f %.3f", "Angular Momentum", state.L[0], state.L[1], state.L[2]);
     }
-    ImGui::DragFloat3("Force", f, 10.0f);
-    ImGui::DragFloat3("WorldPos", p, 0.01f);
-    if (!edited) {
-      for (unsigned i = 0; i < 3; ++i) {
-        if (p[i] != obj.mRigidBody->GetPos()[i]) {
-          edited = true;
+
+    if (ImGui::CollapsingHeader("Object modification")) {
+      static bool showVector = true;
+      ImGui::Checkbox("Show Vector", &showVector);
+
+      static float f[3] = { 0 };
+      static float p[3];
+      static bool edited = false;
+      if (lastItem != item || !edited) {
+        for (unsigned i = 0; i < 3; ++i) {
+          p[i] = obj.mRigidBody->GetPos()[i];
         }
       }
-    }
+      ImGui::DragFloat3("Force", f, 10.0f);
+      ImGui::DragFloat3("WorldPos", p, 0.01f);
+      if (!edited) {
+        for (unsigned i = 0; i < 3; ++i) {
+          if (p[i] != obj.mRigidBody->GetPos()[i]) {
+            edited = true;
+          }
+        }
+      }
 
-    glm::vec3 force = glm::vec3(f[0], f[1], f[2]);
-    glm::vec3 pos = glm::vec3(p[0], p[1], p[2]);
+      glm::vec3 force = glm::vec3(f[0], f[1], f[2]);
+      glm::vec3 pos = glm::vec3(p[0], p[1], p[2]);
 
-    mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + force);
+      mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + force);
 
-    if (ImGui::Button("Apply")) {
-      obj.mRigidBody->ApplyForce(force, pos);
-      edited = false;
+      if (ImGui::Button("Apply")) {
+        obj.mRigidBody->ApplyForce(force, pos);
+        edited = false;
+      }
     }
   }
 

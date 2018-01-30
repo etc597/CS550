@@ -121,9 +121,7 @@ float GraphicsSystem::Update()
 
   Draw();
 
-  if (mDebug) {
-    DebugDraw();
-  }
+  DebugDraw();
 
   if (mEditor) {
     mEditor->Update();
@@ -207,15 +205,22 @@ Model * GraphicsSystem::GetModel(const std::string & name)
   return nullptr;
 }
 
+bool GraphicsSystem::GetDebug()
+{
+  return mDebug;
+}
+
 void GraphicsSystem::SetDebug(bool val)
 {
   mDebug = val;
 }
 
-void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2)
+void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, bool force /*= false*/)
 {
-  mDebugLines.push_back(p1);
-  mDebugLines.push_back(p2);
+  if (mDebug || force) {
+    mDebugLines.push_back(p1);
+    mDebugLines.push_back(p2);
+  }
 }
 
 bool GraphicsSystem::DebugInit()

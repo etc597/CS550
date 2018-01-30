@@ -28,8 +28,9 @@ public:
   void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
   Model* GetModel(const std::string& name);
 
+  bool GetDebug();
   void SetDebug(bool val);
-  void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2);
+  void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, bool force = false);
 private:
   bool DebugInit();
   void ProcessInput(GLFWwindow * window, float dt);
