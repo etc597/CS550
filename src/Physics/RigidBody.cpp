@@ -64,7 +64,8 @@ bool RigidBody::Init(Object * object)
 
 void RigidBody::DebugUpdate()
 {
-  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, x, x + v);
+  mEngine->GetGraphicsSystem()->DebugDrawLine(x, x + v);
+  mEngine->GetGraphicsSystem()->DebugDrawLine(x, x + w);
 }
 
 void RigidBody::Update(float dt)
@@ -134,6 +135,15 @@ void RigidBody::SetState(const RigidBodyData & data)
   torque = data.torque;
   force = data.force;
   mass = data.mass;
+
+  glm::mat3 R(glm::normalize(q));
+  glm::mat3 I = R * Ibody * glm::transpose(R);
+  glm::mat3 Iinv = glm::inverse(I);
+
+  v = P / mass;
+  a = force / mass;
+  w = Iinv * L;
+  wp = Iinv * torque;
 }
 
 RigidBodyData RigidBody::GetState()

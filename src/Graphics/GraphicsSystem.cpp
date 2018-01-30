@@ -212,16 +212,10 @@ void GraphicsSystem::SetDebug(bool val)
   mDebug = val;
 }
 
-void GraphicsSystem::DebugDrawLine(Object* object, const glm::vec3& p1, const glm::vec3& p2)
+void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2)
 {
-  if (mDebug) {
-    auto it = mDebugLines.find(object);
-    if (it == mDebugLines.end()) {
-      mDebugLines.emplace(object, std::vector<glm::vec3>(2));
-    }
-    mDebugLines.at(object).push_back(p1);
-    mDebugLines.at(object).push_back(p2);
-  }
+  mDebugLines.push_back(p1);
+  mDebugLines.push_back(p2);
 }
 
 bool GraphicsSystem::DebugInit()
@@ -316,32 +310,21 @@ void GraphicsSystem::DebugDraw()
   projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
   mShaders[1].SetMat4("projection", projection);
 
-  std::vector<Object*> dead_objects;
-  for (auto& lines : mDebugLines) {
 
-    if (lines.second.empty()) {
-      dead_objects.push_back(lines.first);
-      continue;
-    }
-
-    //glm::mat4 model ({ 1, 0, 0,
-    //                    0, 1, 0,
-    //                    0, 0, 1 });
-    mShaders[1].SetMat4("model", glm::mat4());
-    mShaders[1].SetVec3("obj_color", glm::vec3(1, 0, 0));
+  //glm::mat4 model ({ 1, 0, 0,
+  //                    0, 1, 0,
+  //                    0, 0, 1 });
+  mShaders[1].SetMat4("model", glm::mat4());
+  mShaders[1].SetVec3("obj_color", glm::vec3(1, 0, 0));
 
 
-    glBindVertexArray(mDebugVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
-    glBufferData(GL_ARRAY_BUFFER, lines.second.size() * sizeof(glm::vec3), lines.second.data(), GL_DYNAMIC_DRAW);
+  glBindVertexArray(mDebugVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
+  glBufferData(GL_ARRAY_BUFFER, mDebugLines.size() * sizeof(glm::vec3), mDebugLines.data(), GL_DYNAMIC_DRAW);
 
-    glLineWidth(1.5f);
-    glDrawArrays(GL_LINES, 0, lines.second.size());
-    glBindVertexArray(0);
+  glLineWidth(1.5f);
+  glDrawArrays(GL_LINES, 0, mDebugLines.size());
+  glBindVertexArray(0);
 
-    lines.second.clear();
-  }
-  for (auto& dead : dead_objects) {
-    mDebugLines.erase(dead);
-  }
+  mDebugLines.clear();
 }
