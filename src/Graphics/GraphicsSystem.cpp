@@ -121,8 +121,7 @@ float GraphicsSystem::Update()
 
   Draw();
 
-  if (mDebug)
-  {
+  if (mDebug) {
     DebugDraw();
   }
 
@@ -166,8 +165,8 @@ void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos
     firstMouse = false;
   }
   if (mCamera.mMove) {
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+    float xoffset = (float)(xpos - lastX);
+    float yoffset = (float)(lastY - ypos); // reversed since y-coordinates range from bottom to top
 
     float sensitivity = 0.125f;
     xoffset *= sensitivity;
@@ -193,10 +192,11 @@ void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos
 
 void GraphicsSystem::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
 {
+  UNUSED(xoffset);
   if (mCamera.mMove) {
     float fov = mCamera.mFov;
     if (fov >= 1.0f && fov <= 45.0f)
-      fov -= yoffset;
+      fov -= (float)yoffset;
     if (fov <= 1.0f)
       fov = 1.0f;
     if (fov >= 45.0f)
@@ -301,6 +301,12 @@ void GraphicsSystem::Draw()
 
 void GraphicsSystem::DebugDraw()
 {
+  auto objects = mEngine->GetObjects();
+
+  for (auto& obj : objects) {
+    obj.mRigidBody->DebugUpdate();
+  }
+
   mShaders[1].UseShaderProgram();
 
   glm::mat4 view;

@@ -1,5 +1,6 @@
 #include "RigidBody.hpp"
 
+#include "Core/Engine.hpp"
 #include "Core/Object.hpp"
 #include "Graphics/Model.hpp"
 using namespace ELBA;
@@ -14,13 +15,15 @@ glm::mat3 helper_matrix(glm::vec3 a)
 }
 
 RigidBody::RigidBody()
-  : mModel(nullptr)
+  :  mEngine(nullptr)
+  , mModel(nullptr)
   , mass(1.0f)
 {
 }
 
 RigidBody::RigidBody(const RigidBodyData & data)
-  : mModel(nullptr)
+  : mEngine(nullptr)
+  , mModel(nullptr)
   , x(data.x)
   , q(data.q)
   , P(data.P)
@@ -35,6 +38,7 @@ RigidBody::RigidBody(const RigidBodyData & data)
 
 bool RigidBody::Init(Object * object)
 {
+  mEngine = object->mEngine;
   mModel = object->mModel;
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
     cm += vertex.mPos;
@@ -52,6 +56,11 @@ bool RigidBody::Init(Object * object)
   }
   Ibody *= mass;
   return true;
+}
+
+void RigidBody::DebugUpdate()
+{
+  mEngine->GetGraphicsSystem()->DebugDrawLine(x, x + v);
 }
 
 void RigidBody::Update(float dt)

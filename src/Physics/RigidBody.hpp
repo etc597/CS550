@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-
+class Engine;
 class Object;
 namespace ELBA {
   class Model;
@@ -38,6 +38,7 @@ public:
   RigidBody();
   RigidBody(const RigidBodyData& data);
   bool Init(Object * object);
+  void DebugUpdate();
   void Update(float dt);
   void ApplyForce(glm::vec3 force, glm::vec3 pos);
   void ApplyForce(glm::vec3 force);
@@ -46,6 +47,7 @@ public:
   RigidBodyData GetState();
   glm::mat4 GetModelMatrix();
 private:
+  Engine * mEngine;
   ELBA::Model * mModel;
 
   std::vector<AppliedForce> mAppliedForces;
