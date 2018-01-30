@@ -53,9 +53,9 @@ bool RigidBody::Init(Object * object)
     Ibody[0][0] += r.y * r.y + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.y * r.y;
-    Ibody[0][1] = Ibody[1][0] = -r.x * r.y;
-    Ibody[0][2] = Ibody[2][0] = -r.x * r.z;
-    Ibody[1][2] = Ibody[2][1] = -r.y * r.z;
+    Ibody[0][1] = (Ibody[1][0] += -r.x * r.y);
+    Ibody[0][2] = (Ibody[2][0] += -r.x * r.z);
+    Ibody[1][2] = (Ibody[2][1] += -r.y * r.z);
   }
   Ibody *= mass;
   Update(0);
@@ -64,13 +64,14 @@ bool RigidBody::Init(Object * object)
 
 void RigidBody::DebugUpdate()
 {
-  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, cm, cm + v);
+  mEngine->GetGraphicsSystem()->DebugDrawLine(mObject, x, x + v);
 }
 
 void RigidBody::Update(float dt)
 {
   glm::mat3 R(glm::normalize(q)); // orientation matrix
-  glm::mat3 Iinv = R * glm::inverse(Ibody) * glm::transpose(R);
+  glm::mat3 I = R * Ibody * glm::transpose(R);
+  glm::mat3 Iinv = glm::inverse(I);
 
   force = glm::vec3(0);
   torque = glm::vec3(0);
@@ -79,12 +80,14 @@ void RigidBody::Update(float dt)
   for (auto& t : mAppliedTorques) {
     torque += t;
   }
+  mAppliedTorques.clear();
 
   // take in applied forces
   for (auto& aF : mAppliedForces) {
     torque += glm::cross(aF.pos - x, aF.force);
     force += aF.force;
   }
+  mAppliedForces.clear();
 
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
     glm::vec3 r = R * vertex.mPos + x; // pos of particle in world space
@@ -152,9 +155,9 @@ glm::mat4 RigidBody::GetModelMatrix()
   glm::mat4 rotate(glm::normalize(q));
 
   glm::mat4 model;
-  model = glm::scale(model, scale);
-  model = rotate;
   model = glm::translate(model, x);
+  model *= rotate;
+  model = glm::scale(model, scale);
   return model;
 }
 

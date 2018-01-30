@@ -327,7 +327,7 @@ void GraphicsSystem::DebugDraw()
     //glm::mat4 model ({ 1, 0, 0,
     //                    0, 1, 0,
     //                    0, 0, 1 });
-    mShaders[1].SetMat4("model", lines.first->GetModelMatrix());
+    mShaders[1].SetMat4("model", glm::mat4());
     mShaders[1].SetVec3("obj_color", glm::vec3(1, 0, 0));
 
 
