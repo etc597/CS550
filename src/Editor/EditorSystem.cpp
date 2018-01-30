@@ -154,7 +154,7 @@ void EditorSystem::ObjectEditor()
         mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir);
       }
 
-      if (ImGui::Button("Apply")) {
+      if (ImGui::Button("Apply Force")) {
         obj.mRigidBody->ApplyForce(force, pos);
         edited = false;
       }
@@ -177,7 +177,7 @@ void EditorSystem::ObjectEditor()
         mEngine->GetGraphicsSystem()->DebugDrawLine(objPos, objPos + s * lineDir);
       }
       
-      if (ImGui::Button("Apply")) {
+      if (ImGui::Button("Apply Torque")) {
         obj.mRigidBody->ApplyTorque(torque);
       }
     }
