@@ -1,2 +1,3 @@
-https://en.wikipedia.org/wiki/Exterior_algebra#Cross_and_triple_products
+https://en.wikipedia.org/wiki/Exterior_algebra
 https://en.wikipedia.org/wiki/Quaternion
+http://kmamou.blogspot.com/2011/10/hacd-hierarchical-approximate-convex.html
