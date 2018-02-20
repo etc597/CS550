@@ -57,6 +57,7 @@ public:
   RigidBodyData GetState();
   glm::mat4 GetModelMatrix();
   glm::vec3 GetPos();
+  glm::mat4 GetDeltaMatrix();
 private:
   Object * mObject;
   Engine * mEngine;
@@ -82,6 +83,9 @@ private:
   glm::vec3 torque;
 
   float mass;
+
+  glm::vec3 deltaX;
+  glm::quat deltaQ;
 };
 
 #endif

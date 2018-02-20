@@ -95,7 +95,8 @@ void RigidBody::Update(float dt)
   v = P / mass;
   a = force / mass;
 
-  x = x + v * dt + 0.5f * a * dt * dt;
+  deltaX = v * dt + 0.5f * a * dt * dt;
+  x = x + deltaX;
 
 
   L = L + torque * dt;
@@ -104,7 +105,9 @@ void RigidBody::Update(float dt)
 
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
   glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
-  q += qdot * dt + 0.5f * qdotdot * dt * dt;
+
+  deltaQ = qdot * dt + 0.5f * qdotdot * dt * dt;
+  q += deltaQ;
 }
 
 void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
@@ -170,6 +173,18 @@ glm::mat4 RigidBody::GetModelMatrix()
 glm::vec3 RigidBody::GetPos()
 {
   return x;
+}
+
+glm::mat4 RigidBody::GetDeltaMatrix()
+{
+  glm::vec3 scale(1, 1, 1);
+  glm::mat4 rotate(deltaQ);
+
+  glm::mat4 delta;
+  delta = glm::translate(delta, deltaX);
+  delta *= rotate;
+  delta = glm::scale(delta, scale);
+  return delta;
 }
 
 
