@@ -3,9 +3,22 @@
 #include "Core/Object.hpp"
 #include "Physics/RigidBody.hpp"
 
+#include "Graphics/Model.hpp"
+using namespace ELBA;
+
 bool Collider::Init(Object * object)
 {
-  return false;
+  mObject = mObject;
+  mEngine = mObject->mEngine;
+  mModel = mObject->mModel;
+
+  std::vector<glm::vec3> points;
+  for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    points.push_back(vertex.mPos);
+  }
+  mAABB.Compute(points);
+
+  return true;
 }
 
 void Collider::DebugUpdate()
