@@ -36,6 +36,7 @@ AABBTree::Node * AABBTree::GetParent(Node * aNode)
 
 AABBTree::Node * AABBTree::GetSibling(Node * aNode)
 {
+  // TODO: Make this safe
   Node * mParent = GetParent(aNode);
   if (mParent->mLeftIndex = aNode->mSelfIndex) {
     return GetRight(mParent);
