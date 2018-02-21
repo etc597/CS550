@@ -15,31 +15,38 @@ public:
 class AABBTree
 {
 public:
-  AABBTree() = default;
+  AABBTree();
 
-  void InsertData(Collider * aCollider);
-  void UpdateData(Collider * aCollider);
-  void RemoveData(Collider * aCollider);
+  void InsertData(unsigned& key, Collider * aCollider);
+  void UpdateData(unsigned key, Collider * aCollider);
+  void RemoveData(unsigned key);
 
   void SelfQuery(QueryResults& results);
 private:
   class Node
   {
   public:
-    Collider * mCollider;
-    AABB mAABB;
-    int mParentIndex;
-    int mLeftIndex;
-    int mRightIndex;
-    int mSelfIndex;
+    AABB aabb;
+    unsigned parent;
+    unsigned self;
+    unsigned left;
+    unsigned right;
+    bool leaf;
   };
 
-  Node * GetLeft(Node * aNode);
-  Node * GetRight(Node * aNode);
-  Node * GetParent(Node * aNode);
-  Node * GetSibling(Node * aNode);
+  void Insert(unsigned key);
+  void Reshape(unsigned key);
 
-  Node * mRoot;
+  unsigned AcquireKey();
+  void ReleaseKey(unsigned key);
+  Node& AcquireNode(unsigned key);
+  Node& Nodes(unsigned key);
+  void Erase(unsigned key);
+  float Heuristic(const AABB& aabb1, const AABB& aabb2);
+
+  const float mPad;
+  unsigned mRoot;
+  unsigned mKeyCounter;
   std::vector<Node> mNodes;
   std::stack<int> mFreeIndex;
 };

@@ -20,6 +20,7 @@ public:
   AABB operator+(const AABB& lhs) const;
   AABB& operator+=(const AABB& lhs);
   void Transform(const glm::mat4& transform);
+  void Pad(float aPad);
 
   glm::vec3 GetMin() const;
   glm::vec3 GetMax() const;

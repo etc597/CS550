@@ -112,6 +112,12 @@ void AABB::Transform(const glm::mat4 & transform)
   mMin = c - r;
 }
 
+void AABB::Pad(float aPad)
+{
+  mMin = mMin - glm::vec3(aPad);
+  mMax = mMax + glm::vec3(aPad);
+}
+
 glm::vec3 AABB::GetMin() const
 {
   return mMin;
