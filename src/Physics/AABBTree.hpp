@@ -41,7 +41,7 @@ private:
   void ReleaseKey(unsigned key);
   Node& AcquireNode(unsigned key);
   Node& Nodes(unsigned key);
-  void Erase(unsigned key);
+  unsigned Erase(unsigned key);
   float Heuristic(const AABB& aabb1, const AABB& aabb2);
 
   const float mPad;

@@ -71,6 +71,8 @@ AABB & AABB::operator+=(const glm::vec3 & point)
     mMin[i] = std::min(mMin[i], point[i]);
     mMax[i] = std::max(mMax[i], point[i]);
   }
+
+  return *this;
 }
 
 AABB AABB::operator+(const AABB & lhs) const
@@ -85,6 +87,8 @@ AABB & AABB::operator+=(const AABB & lhs)
     mMin[i] = std::min(mMin[i], lhs.mMin[i]);
     mMax[i] = std::max(mMax[i], lhs.mMax[i]);
   }
+
+  return *this;
 }
 
 void AABB::Transform(const glm::mat4 & transform)
