@@ -73,6 +73,9 @@ void RigidBody::DebugUpdate()
 
 void RigidBody::Update(float dt)
 {
+  if (dt < 0) {
+    return;
+  }
   glm::mat3 R(glm::normalize(q)); // orientation matrix
   glm::mat3 I = R * Ibody * glm::transpose(R);
   glm::mat3 Iinv = glm::inverse(I);
@@ -129,6 +132,11 @@ void RigidBody::ApplyTorque(glm::vec3 torque)
 
 void RigidBody::SetState(const RigidBodyData & data)
 {
+  deltaQ = data.q;
+  deltaQ -= q;
+
+  deltaX = data.x - x;
+
   x = data.x;
   q = data.q;
   P = data.P;

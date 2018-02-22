@@ -151,12 +151,14 @@ void Engine::Update()
 
   switch (mState) {
   case State::Pause:
+    mPhysics.Update(0);
     break;
   case State::Play:
     mPhysics.Update(dt);
     Cache();
     break;
   case State::Rewind:
+    mPhysics.Update(-1);
     RewindUpdate();
     break;
   default:
