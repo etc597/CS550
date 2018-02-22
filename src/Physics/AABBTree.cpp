@@ -1,6 +1,8 @@
 #include "AABBTree.hpp"
 #include "Physics/Collider.hpp"
 
+#include <functional>
+
 AABBTree::AABBTree()
   : mRoot(0)
   , mKeyCounter(0)
@@ -14,6 +16,7 @@ void AABBTree::InsertData(unsigned& key, Collider * aCollider)
 {
   key = AcquireKey();
   Node& node = AcquireNode(key);
+  node.data = aCollider;
   node.aabb = aCollider->GetAABB();
   node.aabb.Pad(mPad);
   node.leaf = true;
@@ -38,6 +41,7 @@ void AABBTree::UpdateData(unsigned key, Collider * aCollider)
     return;
   }
 
+  node.data = aCollider;
   node.aabb = aCollider->GetAABB();
   node.aabb.Pad(mPad);
 
@@ -56,6 +60,58 @@ void AABBTree::RemoveData(unsigned key)
 
 void AABBTree::SelfQuery(QueryResults & results)
 {
+  results.mPairs.clear();
+  if (!mRoot || Nodes(mRoot).leaf) {
+    return;
+  }
+
+  for (auto& node : mNodes) {
+    node.crossedChildren = false;
+  }
+
+  auto CrossChildren = std::function<void(Node&)>();
+  auto ComputePairs = std::function<void(Node&, Node&)>();
+
+  auto ComputePairs = [&](Node& n0, Node& n1) {
+    if (n0.leaf && n1.leaf) {
+      results.mPairs.emplace_back(n0.data, n1.data);
+    }
+    else if (n0.leaf) {
+      CrossChildren(n1);
+      ComputePairs(n0, Nodes(n1.left));
+      ComputePairs(n0, Nodes(n1.right));
+    }
+    else if (n1.leaf) {
+      CrossChildren(n0);
+      ComputePairs(n1, Nodes(n0.left));
+      ComputePairs(n1, Nodes(n0.right));
+    }
+    else
+    {
+      CrossChildren(n0);
+      CrossChildren(n1);
+      auto& n0L = Nodes(n0.left);
+      auto& n0R = Nodes(n0.right);
+      auto& n1L = Nodes(n1.left);
+      auto& n1R = Nodes(n1.right);
+
+      ComputePairs(n0L, n1L);
+      ComputePairs(n0L, n1R);
+      ComputePairs(n0R, n1L);
+      ComputePairs(n0R, n1R);
+    }
+
+    auto& root = Nodes(mRoot);
+    ComputePairs(Nodes(root.left), Nodes(root.right));
+  };
+
+  CrossChildren = [&](Node& node) {
+    if (!node.crossedChildren)
+    {
+      ComputePairs(Nodes(node.left), Nodes(node.right));
+      node.crossedChildren = true;
+    }
+  };
 }
 
 void AABBTree::Insert(unsigned key)

@@ -26,12 +26,14 @@ private:
   class Node
   {
   public:
+    Collider * data;
     AABB aabb;
     unsigned parent;
     unsigned self;
     unsigned left;
     unsigned right;
     bool leaf;
+    bool crossedChildren;
   };
 
   void Insert(unsigned key);
