@@ -56,6 +56,7 @@ void PhysicsSystem::Update(float dt)
   }
 
   for (auto& col : mColliders) {
+    col.second.Update(dt);
     mBroadPhase.UpdateData(col.second.mKey, &col.second);
   }
 
