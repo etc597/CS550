@@ -1,5 +1,7 @@
 #include "PhysicsSystem.hpp"
 #include "Core/Engine.hpp"
+#include "Graphics/GraphicsSystem.hpp"
+#include "Physics/AABB.hpp"
 
 PhysicsSystem::PhysicsSystem(Engine * engine)
   : mEngine(engine)
@@ -61,6 +63,12 @@ void PhysicsSystem::Update(float dt)
   }
 
   mBroadPhase.SelfQuery(mResults);
+
+  auto drawfn = [this](const AABB& aabb) {
+    mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb);
+  };
+
+  mBroadPhase.DebugDraw(drawfn);
 }
 
 void PhysicsSystem::Deinit()

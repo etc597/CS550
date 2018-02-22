@@ -53,7 +53,19 @@ void AABBTree::UpdateData(unsigned key, Collider * aCollider)
 void AABBTree::RemoveData(unsigned key)
 {
   Reshape(Erase(key));
+  ReleaseNode(key);
   ReleaseKey(key);
+}
+
+void AABBTree::DebugDraw(std::function<void(const AABB&)> draw, int level /*= -1*/)
+{
+  if (level == -1) {
+    for (auto& node : mNodes) {
+      if (node.active) {
+        draw(node.aabb);
+      }
+    }
+  }
 }
 
 void AABBTree::SelfQuery(QueryResults & results)
@@ -192,7 +204,13 @@ AABBTree::Node& AABBTree::AcquireNode(unsigned key)
     mNodes.emplace_back();
     mNodes.back().self = mNodes.size();
   }
+  mNodes[key - 1].active = true;
   return mNodes[key - 1];
+}
+
+void AABBTree::ReleaseNode(unsigned key)
+{
+  Nodes(key).active = false;
 }
 
 AABBTree::Node& AABBTree::Nodes(unsigned key)
@@ -227,6 +245,7 @@ unsigned AABBTree::Erase(unsigned key)
     }
   }
 
+  ReleaseNode(parent);
   ReleaseKey(parent);
   return sibling;
 }

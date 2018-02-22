@@ -3,6 +3,7 @@
 
 #include "Physics/AABB.hpp"
 #include <stack>
+#include <functional>
 
 class Collider;
 
@@ -21,6 +22,8 @@ public:
   void UpdateData(unsigned key, Collider * aCollider);
   void RemoveData(unsigned key);
 
+  void DebugDraw(std::function<void(const AABB&)> draw, int level = -1);
+
   void SelfQuery(QueryResults& results);
 private:
   class Node
@@ -33,6 +36,7 @@ private:
     unsigned right;
     bool leaf;
     bool crossedChildren;
+    bool active;
   };
 
   void Insert(unsigned key);
@@ -41,6 +45,7 @@ private:
   unsigned AcquireKey();
   void ReleaseKey(unsigned key);
   Node& AcquireNode(unsigned key);
+  void ReleaseNode(unsigned key);
   Node& Nodes(unsigned key);
   unsigned Erase(unsigned key);
   float Heuristic(const AABB& aabb1, const AABB& aabb2);
