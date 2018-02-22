@@ -31,8 +31,8 @@ public:
 
   bool GetDebug();
   void SetDebug(bool val);
-  void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, bool force = false);
-  void DebugDrawAABB(const AABB& aabb);
+  void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, glm::vec3 color = glm::vec3(1, 1, 1), bool force = false);
+  void DebugDrawAABB(const AABB& aabb, glm::vec3 color = glm::vec3(1,1,1));
 private:
   bool DebugInit();
   void ProcessInput(GLFWwindow * window, float dt);
@@ -50,7 +50,7 @@ private:
   Camera mCamera;
   std::unordered_map<std::string, Model> mModels;
   bool mDebug;
-  std::vector<glm::vec3> mDebugLines;
+  std::unordered_map<glm::vec3, std::vector<glm::vec3>> mDebugLines;
   unsigned int mDebugVAO;
   unsigned int mDebugVBO;
 };

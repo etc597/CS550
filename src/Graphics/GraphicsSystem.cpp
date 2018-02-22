@@ -216,15 +216,21 @@ void GraphicsSystem::SetDebug(bool val)
   mDebug = val;
 }
 
-void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, bool force /*= false*/)
+void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, glm::vec3 color /*= glm::vec3(1, 1, 1)*/, bool force /*= false*/)
 {
   if (mDebug || force) {
-    mDebugLines.push_back(p1);
-    mDebugLines.push_back(p2);
+    auto it = mDebugLines.find(color);
+    if (it != mDebugLines.end()) {
+      it->second.push_back(p1);
+      it->second.push_back(p2);
+    }
+    else {
+      mDebugLines.emplace(color, std::vector<glm::vec3>({ p1, p2 }));
+    }
   }
 }
 
-void GraphicsSystem::DebugDrawAABB(const AABB & aabb)
+void GraphicsSystem::DebugDrawAABB(const AABB& aabb, glm::vec3 color /*= glm::vec3(1,1,1)*/)
 {
   glm::vec3 extents = aabb.GetHalfExtents();
   auto width = glm::vec3(extents.x * 2, 0, 0);
@@ -344,7 +350,7 @@ void GraphicsSystem::DebugDraw()
   auto& objects = mEngine->GetObjects();
 
   for (auto& obj : objects) {
-  //  obj.mRigidBody->DebugUpdate();
+    obj.mRigidBody->DebugUpdate();
     obj.mCollider->DebugUpdate();
   }
 
@@ -357,21 +363,22 @@ void GraphicsSystem::DebugDraw()
   projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
   mShaders[1].SetMat4("projection", projection);
 
-
   //glm::mat4 model ({ 1, 0, 0,
   //                    0, 1, 0,
   //                    0, 0, 1 });
   mShaders[1].SetMat4("model", glm::mat4());
-  mShaders[1].SetVec3("obj_color", glm::vec3(1, 0, 0));
+
+  for (auto& pair : mDebugLines) {
+    mShaders[1].SetVec3("obj_color", pair.first);
 
 
-  glBindVertexArray(mDebugVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
-  glBufferData(GL_ARRAY_BUFFER, mDebugLines.size() * sizeof(glm::vec3), mDebugLines.data(), GL_DYNAMIC_DRAW);
+    glBindVertexArray(mDebugVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
+    glBufferData(GL_ARRAY_BUFFER, mDebugLines.size() * sizeof(glm::vec3), pair.second.data(), GL_DYNAMIC_DRAW);
 
-  glLineWidth(1.5f);
-  glDrawArrays(GL_LINES, 0, mDebugLines.size());
-  glBindVertexArray(0);
-
+    glLineWidth(1.5f);
+    glDrawArrays(GL_LINES, 0, mDebugLines.size());
+    glBindVertexArray(0);
+  }
   mDebugLines.clear();
 }
