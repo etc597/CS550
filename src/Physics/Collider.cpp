@@ -8,7 +8,7 @@ using namespace ELBA;
 
 bool Collider::Init(Object * object)
 {
-  mObject = mObject;
+  mObject = object;
   mEngine = mObject->mEngine;
   mModel = mObject->mModel;
 

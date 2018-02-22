@@ -188,7 +188,7 @@ void AABBTree::ReleaseKey(unsigned key)
 
 AABBTree::Node& AABBTree::AcquireNode(unsigned key)
 {
-  while (key - 1 > mNodes.size()) {
+  while (key > mNodes.size()) {
     mNodes.emplace_back();
     mNodes.back().self = mNodes.size();
   }
