@@ -1,6 +1,8 @@
 #include "Collider.hpp"
 
+#include "Core/Engine.hpp"
 #include "Core/Object.hpp"
+#include "Graphics/GraphicsSystem.hpp"
 #include "Physics/RigidBody.hpp"
 
 #include "Graphics/Model.hpp"
@@ -23,7 +25,7 @@ bool Collider::Init(Object * object)
 
 void Collider::DebugUpdate()
 {
-  //mEngine->GetGraphicsSystem()->DebugDrawAABB(mAABB);
+  mEngine->GetGraphicsSystem()->DebugDrawAABB(mAABB);
 }
 
 void Collider::Update(float dt)
