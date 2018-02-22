@@ -7,6 +7,7 @@ Object::Object(Engine * engine)
   : mEngine(engine)
   , mModel(nullptr)
   , mRigidBody(nullptr)
+  , mCollider(nullptr)
   , mName()
   , mColor()
 {
@@ -49,12 +50,24 @@ bool Object::Init(const ObjectData& obj, const RigidBodyData& data)
     return false;
   }
 
+  mCollider = physics->CreateCollider(this);
+  if (!mCollider) {
+    std::cout << "Failed to create collider" << std::endl;
+    return false;
+  }
+
+  if (!mCollider->Init(this)) {
+    std::cout << "Failed to init the collider" << std::endl;
+    return false;
+  }
+
   return true;
 }
 
 void Object::Deinit()
 {
   mEngine->GetPhysicsSystem()->DeleteRigidBody(this);
+  mEngine->GetPhysicsSystem()->DeleteCollider(this);
 }
 
 glm::mat4 Object::GetModelMatrix()

@@ -9,7 +9,7 @@ class Collider;
 class QueryResults
 {
 public:
-  std::vector<std::pair<Collider*, Collider*>> mPairs;
+  std::vector<std::pair<unsigned, unsigned>> mPairs;
 };
 
 class AABBTree

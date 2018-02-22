@@ -10,6 +10,7 @@ namespace ELBA {
 class RigidBody;
 struct RigidBodyData;
 class Engine;
+class Collider;
 
 struct ObjectData
 {
@@ -28,6 +29,7 @@ public:
   Engine * mEngine;
   ELBA::Model *  mModel;
   RigidBody * mRigidBody;
+  Collider * mCollider;
   std::string mName;
   glm::vec3 mColor;
 };
