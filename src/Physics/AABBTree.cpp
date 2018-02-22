@@ -83,7 +83,9 @@ void AABBTree::SelfQuery(QueryResults & results)
 
   std::function<void(Node&, Node&)> ComputePairs = [&](Node& n0, Node& n1) {
     if (n0.leaf && n1.leaf) {
-      results.mPairs.emplace_back(n0.self, n1.self);
+      if (n0.aabb.Collides(n1.aabb)) {
+        results.mPairs.emplace_back(n0.self, n1.self);
+      }
     }
     else if (n0.leaf) {
       CrossChildren(n1);
@@ -109,9 +111,6 @@ void AABBTree::SelfQuery(QueryResults & results)
       ComputePairs(n0R, n1L);
       ComputePairs(n0R, n1R);
     }
-
-    auto& root = Nodes(mRoot);
-    ComputePairs(Nodes(root.left), Nodes(root.right));
   };
 
   CrossChildren = [&](Node& node) {
@@ -121,6 +120,14 @@ void AABBTree::SelfQuery(QueryResults & results)
       node.crossedChildren = true;
     }
   };
+
+  auto& root = Nodes(mRoot);
+  ComputePairs(Nodes(root.left), Nodes(root.right));
+
+  if (!results.mPairs.empty())
+  {
+    results.mPairs.back();
+  }
 }
 
 void AABBTree::Insert(unsigned key)
