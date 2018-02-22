@@ -219,13 +219,18 @@ void GraphicsSystem::SetDebug(bool val)
 void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, glm::vec3 color /*= glm::vec3(1, 1, 1)*/, bool force /*= false*/)
 {
   if (mDebug || force) {
-    auto it = mDebugLines.find(color);
+    auto it = std::find_if(mDebugLines.begin(), mDebugLines.end(), [color](const std::pair<glm::vec3, std::vector<glm::vec3>>& pair)->bool {
+      if (pair.first == color) {
+        return true;
+      }
+      return false;
+    });
     if (it != mDebugLines.end()) {
       it->second.push_back(p1);
       it->second.push_back(p2);
     }
     else {
-      mDebugLines.emplace(color, std::vector<glm::vec3>({ p1, p2 }));
+      mDebugLines.push_back(std::make_pair(color, std::vector<glm::vec3>({ p1, p2 })));
     }
   }
 }
@@ -368,16 +373,16 @@ void GraphicsSystem::DebugDraw()
   //                    0, 0, 1 });
   mShaders[1].SetMat4("model", glm::mat4());
 
-  for (auto& pair : mDebugLines) {
+  for (auto pair : mDebugLines) {
     mShaders[1].SetVec3("obj_color", pair.first);
 
 
     glBindVertexArray(mDebugVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mDebugVBO);
-    glBufferData(GL_ARRAY_BUFFER, mDebugLines.size() * sizeof(glm::vec3), pair.second.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, pair.second.size() * sizeof(glm::vec3), pair.second.data(), GL_DYNAMIC_DRAW);
 
     glLineWidth(1.5f);
-    glDrawArrays(GL_LINES, 0, mDebugLines.size());
+    glDrawArrays(GL_LINES, 0, pair.second.size());
     glBindVertexArray(0);
   }
   mDebugLines.clear();

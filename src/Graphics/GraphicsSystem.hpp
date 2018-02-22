@@ -50,7 +50,7 @@ private:
   Camera mCamera;
   std::unordered_map<std::string, Model> mModels;
   bool mDebug;
-  std::unordered_map<glm::vec3, std::vector<glm::vec3>> mDebugLines;
+  std::vector<std::pair<glm::vec3, std::vector<glm::vec3>>> mDebugLines;
   unsigned int mDebugVAO;
   unsigned int mDebugVBO;
 };
