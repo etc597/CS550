@@ -22,7 +22,7 @@ public:
   void UpdateData(unsigned key, Collider * aCollider);
   void RemoveData(unsigned key);
 
-  void DebugDraw(std::function<void(const AABB&)> draw, int level = -1);
+  void DebugDraw(std::function<void(const AABB&, unsigned)> draw, int level = -1);
 
   void SelfQuery(QueryResults& results);
 private:

@@ -57,12 +57,12 @@ void AABBTree::RemoveData(unsigned key)
   ReleaseKey(key);
 }
 
-void AABBTree::DebugDraw(std::function<void(const AABB&)> draw, int level /*= -1*/)
+void AABBTree::DebugDraw(std::function<void(const AABB&, unsigned)> draw, int level /*= -1*/)
 {
   if (level == -1) {
     for (auto& node : mNodes) {
       if (node.active) {
-        draw(node.aabb);
+        draw(node.aabb, node.self);
       }
     }
   }

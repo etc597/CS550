@@ -253,22 +253,22 @@ void GraphicsSystem::DebugDrawAABB(const AABB& aabb, glm::vec3 color /*= glm::ve
   points[7] = points[4] - depth;
   
 
-  DebugDrawLine(points[0], points[1]);
-  DebugDrawLine(points[0], points[2]);
-  DebugDrawLine(points[0], points[3]);
+  DebugDrawLine(points[0], points[1], color);
+  DebugDrawLine(points[0], points[2], color);
+  DebugDrawLine(points[0], points[3], color);
 
-  DebugDrawLine(points[4], points[5]);
-  DebugDrawLine(points[4], points[6]);
-  DebugDrawLine(points[4], points[7]);
+  DebugDrawLine(points[4], points[5], color);
+  DebugDrawLine(points[4], points[6], color);
+  DebugDrawLine(points[4], points[7], color);
 
-  DebugDrawLine(points[1], points[6]);
-  DebugDrawLine(points[1], points[7]);
+  DebugDrawLine(points[1], points[6], color);
+  DebugDrawLine(points[1], points[7], color);
 
-  DebugDrawLine(points[2], points[5]);
-  DebugDrawLine(points[2], points[7]);
+  DebugDrawLine(points[2], points[5], color);
+  DebugDrawLine(points[2], points[7], color);
 
-  DebugDrawLine(points[3], points[5]);
-  DebugDrawLine(points[3], points[6]);
+  DebugDrawLine(points[3], points[5], color);
+  DebugDrawLine(points[3], points[6], color);
 }
 
 bool GraphicsSystem::DebugInit()
