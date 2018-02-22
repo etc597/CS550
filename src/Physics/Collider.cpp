@@ -15,8 +15,11 @@ bool Collider::Init(Object * object)
   mModel = mObject->mModel;
 
   std::vector<glm::vec3> points;
+  auto initPos = mObject->mRigidBody->GetDeltaMatrix();
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    points.push_back(vertex.mPos);
+    glm::vec4 affinePt(vertex.mPos, 1);
+    affinePt = initPos * affinePt;
+    points.push_back(glm::vec3(affinePt.x, affinePt.y, affinePt.z));
   }
   mAABB.Compute(points);
 

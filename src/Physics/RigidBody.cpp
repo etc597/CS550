@@ -60,6 +60,8 @@ bool RigidBody::Init(Object * object)
   }
   Ibody *= mass;
   Update(0);
+  deltaQ = q;
+  deltaX = x;
   return true;
 }
 

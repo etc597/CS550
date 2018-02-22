@@ -227,9 +227,9 @@ void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, boo
 void GraphicsSystem::DebugDrawAABB(const AABB & aabb)
 {
   glm::vec3 extents = aabb.GetHalfExtents();
-  auto width = glm::vec3(extents.x, 0, 0);
-  auto height = glm::vec3(0, extents.y, 0);
-  auto depth = glm::vec3(0, 0, extents.z);
+  auto width = glm::vec3(extents.x * 2, 0, 0);
+  auto height = glm::vec3(0, extents.y * 2, 0);
+  auto depth = glm::vec3(0, 0, extents.z * 2);
 
   glm::vec3 points[8];
   points[0] = aabb.GetMin();
@@ -344,7 +344,8 @@ void GraphicsSystem::DebugDraw()
   auto& objects = mEngine->GetObjects();
 
   for (auto& obj : objects) {
-    obj.mRigidBody->DebugUpdate();
+  //  obj.mRigidBody->DebugUpdate();
+    obj.mCollider->DebugUpdate();
   }
 
   mShaders[1].UseShaderProgram();

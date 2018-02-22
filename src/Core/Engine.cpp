@@ -17,6 +17,8 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
+  mObjects.reserve(1000); //TODO: Remove this hack and just use uniques
+
   if (!mGraphics.Init(new EditorSystem(this))) {
     return false;
   }
@@ -43,22 +45,22 @@ bool Engine::Init()
   obj.mName = "Sphere";
   obj.mModelName = "sphere";
   obj.mColor = glm::vec3(0.1f, 0.7f, 0.1f);
-
+  
   data.x = glm::vec3(-1.6, 0.3f, -1.0f);
   data.mass = 0.5f;
-
+  
   if (!CreateObject(obj, data)) {
     std::cout << "Failed to create cube object, aborting" << std::endl;
     return false;
   }
-
+  
   obj.mName = "Cylinder";
   obj.mModelName = "cylinder";
   obj.mColor = glm::vec3(0.1f, 0.4f, 0.4f);
-
+  
   data.x = glm::vec3(1.7f, -0.5f, -1.1f);
   data.mass = 0.5f;
-
+  
   if (!CreateObject(obj, data)) {
     std::cout << "Failed to create cube object, aborting" << std::endl;
     return false;
