@@ -12,6 +12,7 @@ struct GLFWwindow;
 class Engine;
 class Object;
 class EditorSystem;
+class AABB;
 
 using namespace ELBA;
 
@@ -31,6 +32,7 @@ public:
   bool GetDebug();
   void SetDebug(bool val);
   void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, bool force = false);
+  void DebugDrawAABB(const AABB& aabb);
 private:
   bool DebugInit();
   void ProcessInput(GLFWwindow * window, float dt);

@@ -13,6 +13,7 @@
 
 #include "Core/Engine.hpp"
 #include "Editor/EditorSystem.hpp"
+#include "Physics/AABB.hpp"
 #include "Utilities.hpp"
 
 static GraphicsSystem* gGraphicsSystem = nullptr;
@@ -221,6 +222,42 @@ void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, boo
     mDebugLines.push_back(p1);
     mDebugLines.push_back(p2);
   }
+}
+
+void GraphicsSystem::DebugDrawAABB(const AABB & aabb)
+{
+  glm::vec3 extents = aabb.GetHalfExtents();
+  auto width = glm::vec3(extents.x, 0, 0);
+  auto height = glm::vec3(0, extents.y, 0);
+  auto depth = glm::vec3(0, 0, extents.z);
+
+  glm::vec3 points[8];
+  points[0] = aabb.GetMin();
+  points[1] = points[0] + width;
+  points[2] = points[0] + height;
+  points[3] = points[0] + depth;
+  points[4] = aabb.GetMax();
+  points[5] = points[4] - width;
+  points[6] = points[4] - height;
+  points[7] = points[4] - depth;
+  
+
+  DebugDrawLine(points[0], points[1]);
+  DebugDrawLine(points[0], points[2]);
+  DebugDrawLine(points[0], points[3]);
+
+  DebugDrawLine(points[4], points[5]);
+  DebugDrawLine(points[4], points[6]);
+  DebugDrawLine(points[4], points[7]);
+
+  DebugDrawLine(points[1], points[6]);
+  DebugDrawLine(points[1], points[7]);
+
+  DebugDrawLine(points[2], points[5]);
+  DebugDrawLine(points[2], points[7]);
+
+  DebugDrawLine(points[3], points[5]);
+  DebugDrawLine(points[3], points[6]);
 }
 
 bool GraphicsSystem::DebugInit()
