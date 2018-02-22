@@ -16,7 +16,6 @@ void AABBTree::InsertData(unsigned& key, Collider * aCollider)
 {
   key = AcquireKey();
   Node& node = AcquireNode(key);
-  node.data = aCollider;
   node.aabb = aCollider->GetAABB();
   node.aabb.Pad(mPad);
   node.leaf = true;
@@ -41,7 +40,6 @@ void AABBTree::UpdateData(unsigned key, Collider * aCollider)
     return;
   }
 
-  node.data = aCollider;
   node.aabb = aCollider->GetAABB();
   node.aabb.Pad(mPad);
 
@@ -73,7 +71,7 @@ void AABBTree::SelfQuery(QueryResults & results)
 
   std::function<void(Node&, Node&)> ComputePairs = [&](Node& n0, Node& n1) {
     if (n0.leaf && n1.leaf) {
-      results.mPairs.emplace_back(n0.data, n1.data);
+      results.mPairs.emplace_back(n0.self, n1.self);
     }
     else if (n0.leaf) {
       CrossChildren(n1);

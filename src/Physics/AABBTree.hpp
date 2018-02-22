@@ -26,7 +26,6 @@ private:
   class Node
   {
   public:
-    Collider * data;
     AABB aabb;
     unsigned parent;
     unsigned self;

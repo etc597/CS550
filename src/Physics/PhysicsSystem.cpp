@@ -22,6 +22,28 @@ bool PhysicsSystem::DeleteRigidBody(Object * object)
   return true;
 }
 
+Collider * PhysicsSystem::CreateCollider(Object * object)
+{
+  auto pair = mColliders.insert(std::make_pair(object, Collider()));
+  auto col = &pair.first->second;
+
+  mBroadPhase.InsertData(col->mKey, col);
+
+  return col;
+}
+
+bool PhysicsSystem::DeleteCollider(Object * object)
+{
+  auto it = mColliders.find(object);
+  if (it == mColliders.end()) {
+    return false;
+  }
+  auto col = &it->second;
+  mBroadPhase.RemoveData(col->mKey);
+  mColliders.erase(it);
+  return true;
+}
+
 bool PhysicsSystem::Init()
 {
   return true;
@@ -32,6 +54,12 @@ void PhysicsSystem::Update(float dt)
   for (auto& body : mBodies) {
     body.second.Update(dt);
   }
+
+  for (auto& col : mColliders) {
+    mBroadPhase.UpdateData(col.second.mKey, &col.second);
+  }
+
+  mBroadPhase.SelfQuery(mResults);
 }
 
 void PhysicsSystem::Deinit()

@@ -17,6 +17,8 @@ public:
   void DebugUpdate();
   void Update(float dt);
   const AABB& GetAABB();
+
+  unsigned mKey;
 private:
   Object * mObject;
   Engine * mEngine;
