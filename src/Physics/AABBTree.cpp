@@ -70,9 +70,8 @@ void AABBTree::SelfQuery(QueryResults & results)
   }
 
   auto CrossChildren = std::function<void(Node&)>();
-  auto ComputePairs = std::function<void(Node&, Node&)>();
 
-  auto ComputePairs = [&](Node& n0, Node& n1) {
+  std::function<void(Node&, Node&)> ComputePairs = [&](Node& n0, Node& n1) {
     if (n0.leaf && n1.leaf) {
       results.mPairs.emplace_back(n0.data, n1.data);
     }
