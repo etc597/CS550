@@ -151,7 +151,7 @@ void EditorSystem::ObjectEditor()
       float s = 4 * 1.0f / (1 + std::exp((-length + 10000) / 10000));
 
       if (showVector) {
-        mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir);
+        mEngine->GetGraphicsSystem()->DebugDrawLine(pos, pos + s * lineDir, glm::vec3(1, 1, 0));
       }
 
       if (ImGui::Button("Apply Force")) {
