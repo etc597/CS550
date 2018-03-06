@@ -50,7 +50,7 @@ bool RigidBody::Init(Object * object)
   cm /= mModel->mMeshes.front().mVertices.size();
 
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
-    glm::vec3 r = vertex.mPos - cm;
+    glm::vec3 r = vertex.mPos;// -cm;
     Ibody[0][0] += r.y * r.y + r.z * r.z;
     Ibody[1][1] += r.x * r.x + r.z * r.z;
     Ibody[2][2] += r.x * r.x + r.y * r.y;
@@ -59,6 +59,7 @@ bool RigidBody::Init(Object * object)
     Ibody[1][2] = (Ibody[2][1] += -r.y * r.z);
   }
   Ibody *= mass;
+  Ibody = glm::inverse(Ibody);
   Update(0);
   deltaQ = q;
   deltaX = x;
@@ -77,8 +78,7 @@ void RigidBody::Update(float dt)
     return;
   }
   glm::mat3 R(glm::normalize(q)); // orientation matrix
-  glm::mat3 I = R * Ibody * glm::transpose(R);
-  glm::mat3 Iinv = glm::inverse(I);
+  glm::mat3 Iinv = R * Ibody * glm::transpose(R);
 
   force = glm::vec3(0);
   torque = glm::vec3(0);
@@ -100,7 +100,7 @@ void RigidBody::Update(float dt)
   v = P / mass;
   a = force / mass;
 
-  deltaX = v * dt + 0.5f * a * dt * dt;
+  deltaX = v * dt;// +0.5f * a * dt * dt;
   x = x + deltaX;
 
 
@@ -109,9 +109,9 @@ void RigidBody::Update(float dt)
   wp = Iinv * torque;
 
   glm::quat qdot = 0.5f * glm::cross(glm::quat(0, w), q);
-  glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
+  //glm::quat qdotdot = 0.5f * glm::cross(qdot, glm::quat(0, w)) + glm::cross(q, glm::quat(0, wp));
 
-  deltaQ = qdot * dt + 0.5f * qdotdot * dt * dt;
+  deltaQ = qdot * dt;// +0.5f * qdotdot * dt * dt;
   q += deltaQ;
 }
 
