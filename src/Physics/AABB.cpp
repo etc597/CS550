@@ -3,7 +3,9 @@
 #include <algorithm>
 
 AABB::AABB(const glm::vec3 & min, const glm::vec3 & max)
-  : mMin(min)
+  : mOrigMin(min)
+  , mOrigMax(max)
+  , mMin(min)
   , mMax(max)
 {
 }
@@ -34,6 +36,8 @@ void AABB::Compute(const std::vector<glm::vec3>& points)
       mMax[i] = std::max(mMax[i], pt[i]);
     }
   }
+  mOrigMin = mMin;
+  mOrigMax = mMax;
 }
 
 bool AABB::Contains(const AABB & aabb) const
@@ -93,8 +97,8 @@ AABB & AABB::operator+=(const AABB & lhs)
 
 void AABB::Transform(const glm::mat4 & transform)
 {
-  glm::vec3 c = GetCenter();
-  glm::vec3 r = GetHalfExtents();
+  glm::vec3 c = (mOrigMax + mOrigMin) * 0.5f;
+  glm::vec3 r = (mOrigMax - mOrigMin) * 0.5f;
 
   glm::vec4 center(c, 1);
   glm::vec4 radius(r, 0);

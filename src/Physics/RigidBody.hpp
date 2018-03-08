@@ -68,6 +68,7 @@ private:
 
   glm::vec3 cm;
   glm::mat3 Ibody;
+  glm::mat4 lastModel;
 
   glm::vec3 x; // position
   glm::quat q; // orientation

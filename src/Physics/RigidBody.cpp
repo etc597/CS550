@@ -77,6 +77,7 @@ void RigidBody::Update(float dt)
   if (dt < 0) {
     return;
   }
+  lastModel = GetModelMatrix();
   glm::mat3 R(glm::normalize(q)); // orientation matrix
   glm::mat3 Iinv = R * Ibody * glm::transpose(R);
 
@@ -132,6 +133,7 @@ void RigidBody::ApplyTorque(glm::vec3 torque)
 
 void RigidBody::SetState(const RigidBodyData & data)
 {
+  lastModel = GetModelMatrix();
   deltaQ = data.q;
   deltaQ -= q;
 
@@ -187,14 +189,7 @@ glm::vec3 RigidBody::GetPos()
 
 glm::mat4 RigidBody::GetDeltaMatrix()
 {
-  glm::vec3 scale(1, 1, 1);
-  glm::mat4 rotate(deltaQ);
-
-  glm::mat4 delta;
-  delta = glm::translate(delta, deltaX);
-  delta *= rotate;
-  delta = glm::scale(delta, scale);
-  return delta;
+  return GetModelMatrix() * glm::inverse(lastModel);
 }
 
 

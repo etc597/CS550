@@ -28,6 +28,8 @@ public:
   glm::vec3 GetHalfExtents() const;
 
 private:
+  glm::vec3 mOrigMin;
+  glm::vec3 mOrigMax;
   glm::vec3 mMin;
   glm::vec3 mMax;
 };
