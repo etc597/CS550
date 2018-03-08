@@ -19,6 +19,7 @@ void AABBTree::InsertData(unsigned& key, Collider * aCollider)
   node.aabb = aCollider->GetAABB();
   node.aabb.Pad(mPad);
   node.leaf = true;
+  node.data = aCollider;
 
   if (mRoot == 0) {
     mRoot = key;
@@ -70,7 +71,7 @@ void AABBTree::DebugDraw(std::function<void(const AABB&, unsigned)> draw, int le
 
 void AABBTree::SelfQuery(QueryResults & results)
 {
-  results.mPairs.clear();
+  results.clear();
   if (!mRoot) {
     return;
   }
@@ -103,7 +104,7 @@ void AABBTree::SelfQuery(Node & nodeA, Node & nodeB, QueryResults & results)
   }
 
   if (nodeA.leaf && nodeB.leaf) {
-    results.mPairs.emplace_back(nodeA.self, nodeB.self);
+    results.emplace_back(nodeA.self, nodeB.self, nodeA.data, nodeB.data);
   }
   else if (nodeA.leaf) {
     SelfQuery(nodeA, Nodes(nodeB.left), results);

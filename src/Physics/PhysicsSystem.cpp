@@ -65,19 +65,24 @@ void PhysicsSystem::Update(float dt)
   mBroadPhase.SelfQuery(mResults);
 
   auto drawfn = [this](const AABB& aabb, unsigned key) {
-    auto it = std::find_if(mResults.mPairs.begin(), mResults.mPairs.end(), [key](const std::pair<unsigned, unsigned>& pair) {
-      if (pair.first == key || pair.second == key) {
+    auto it = std::find_if(mResults.begin(), mResults.end(), [key](const QueryResult& pair) {
+      if (pair.mKeyPair.first == key || pair.mKeyPair.second == key) {
         return true;
       }
       return false;
     });
-    if (it != mResults.mPairs.end()) {
+    if (it != mResults.end()) {
       mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb, glm::vec3(1, 0, 0));
     }
     else {
       mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb);
     }
   };
+
+  for (auto& result : mResults)
+  {
+    // GJK(result.mDataPair);
+  }
 
   mBroadPhase.DebugDraw(drawfn);
 }

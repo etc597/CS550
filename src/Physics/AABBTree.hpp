@@ -7,11 +7,17 @@
 
 class Collider;
 
-class QueryResults
+class QueryResult
 {
 public:
-  std::vector<std::pair<unsigned, unsigned>> mPairs;
+  QueryResult(unsigned key1, unsigned key2, Collider* data1, Collider* data2)
+    : mKeyPair(key1, key2)
+    , mDataPair(data1, data2) {}
+  std::pair<unsigned, unsigned> mKeyPair;
+  std::pair<Collider*, Collider*> mDataPair;
 };
+
+typedef std::vector<QueryResult> QueryResults;
 
 class AABBTree
 {
@@ -36,6 +42,7 @@ private:
     unsigned right;
     bool leaf;
     bool active;
+    Collider * data;
   };
 
   void SelfQuery(Node& node, QueryResults& results);
