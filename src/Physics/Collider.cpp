@@ -26,7 +26,7 @@ bool Collider::Init(Object * object)
 
 void Collider::DebugUpdate()
 {
-  //mEngine->GetGraphicsSystem()->DebugDrawAABB(mAABB);
+  mEngine->GetGraphicsSystem()->DebugDrawAABB(mAABB, glm::vec3(0.5f, 1.0f, 0));
 }
 
 void Collider::Update(float dt)
