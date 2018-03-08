@@ -71,62 +71,59 @@ void AABBTree::DebugDraw(std::function<void(const AABB&, unsigned)> draw, int le
 void AABBTree::SelfQuery(QueryResults & results)
 {
   results.mPairs.clear();
-  if (!mRoot || Nodes(mRoot).leaf) {
+  if (!mRoot) {
     return;
   }
 
-  for (auto& node : mNodes) {
-    node.crossedChildren = false;
+  auto& root = Nodes(mRoot);
+  SelfQuery(root, results);
+
+  //if (!results.mPairs.empty())
+  //{
+  //  results.mPairs.back();
+  //}
+}
+
+void AABBTree::SelfQuery(Node & node, QueryResults& results)
+{
+  if (node.leaf)
+  {
+    return;
   }
 
-  auto CrossChildren = std::function<void(Node&)>();
+  SelfQuery(Nodes(node.left), Nodes(node.right), results);
+  SelfQuery(Nodes(node.left), results);
+  SelfQuery(Nodes(node.right), results);
+}
 
-  std::function<void(Node&, Node&)> ComputePairs = [&](Node& n0, Node& n1) {
-    if (n0.leaf && n1.leaf) {
-      if (n0.aabb.Collides(n1.aabb)) {
-        results.mPairs.emplace_back(n0.self, n1.self);
-      }
-    }
-    else if (n0.leaf) {
-      CrossChildren(n1);
-      ComputePairs(n0, Nodes(n1.left));
-      ComputePairs(n0, Nodes(n1.right));
-    }
-    else if (n1.leaf) {
-      CrossChildren(n0);
-      ComputePairs(n1, Nodes(n0.left));
-      ComputePairs(n1, Nodes(n0.right));
-    }
-    else
-    {
-      CrossChildren(n0);
-      CrossChildren(n1);
-      auto& n0L = Nodes(n0.left);
-      auto& n0R = Nodes(n0.right);
-      auto& n1L = Nodes(n1.left);
-      auto& n1R = Nodes(n1.right);
+void AABBTree::SelfQuery(Node & nodeA, Node & nodeB, QueryResults & results)
+{
+  if (!nodeA.aabb.Collides(nodeB.aabb)) {
+    return;
+  }
 
-      ComputePairs(n0L, n1L);
-      ComputePairs(n0L, n1R);
-      ComputePairs(n0R, n1L);
-      ComputePairs(n0R, n1R);
-    }
-  };
-
-  CrossChildren = [&](Node& node) {
-    if (!node.crossedChildren)
-    {
-      ComputePairs(Nodes(node.left), Nodes(node.right));
-      node.crossedChildren = true;
-    }
-  };
-
-  auto& root = Nodes(mRoot);
-  ComputePairs(Nodes(root.left), Nodes(root.right));
-
-  if (!results.mPairs.empty())
+  if (nodeA.leaf && nodeB.leaf) {
+    results.mPairs.emplace_back(nodeA.self, nodeB.self);
+  }
+  else if (nodeA.leaf) {
+    SelfQuery(nodeA, Nodes(nodeB.left), results);
+    SelfQuery(nodeA, Nodes(nodeB.right), results);
+  }
+  else if (nodeB.leaf) {
+    SelfQuery(nodeB, Nodes(nodeA.left), results);
+    SelfQuery(nodeB, Nodes(nodeA.right), results);
+  }
+  else
   {
-    results.mPairs.back();
+    auto& n0L = Nodes(nodeA.left);
+    auto& n0R = Nodes(nodeA.right);
+    auto& n1L = Nodes(nodeB.left);
+    auto& n1R = Nodes(nodeB.right);
+
+    SelfQuery(n0L, n1L, results);
+    SelfQuery(n0L, n1R, results);
+    SelfQuery(n0R, n1L, results);
+    SelfQuery(n0R, n1R, results);
   }
 }
 
@@ -257,7 +254,7 @@ unsigned AABBTree::Erase(unsigned key)
   return sibling;
 }
 
-float AABBTree::Heuristic(const AABB & aabb1, const AABB & aabb2)
+float AABBTree::Heuristic(const AABB& insertedNode, const AABB& possiblePartner)
 {
-  return (aabb1 + aabb2).GetSurfaceArea();
+  return (insertedNode + possiblePartner).GetSurfaceArea() - possiblePartner.GetSurfaceArea();
 }

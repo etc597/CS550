@@ -47,7 +47,7 @@ bool Engine::Init()
   obj.mColor = glm::vec3(0.1f, 0.7f, 0.1f);
   
   data.x = glm::vec3(-1.6, 0.3f, -1.0f);
-  data.mass = 0.5f;
+  data.mass = 2.0f;
   
   if (!CreateObject(obj, data)) {
     std::cout << "Failed to create cube object, aborting" << std::endl;
@@ -59,7 +59,7 @@ bool Engine::Init()
   obj.mColor = glm::vec3(0.1f, 0.4f, 0.4f);
   
   data.x = glm::vec3(1.7f, -0.5f, -1.1f);
-  data.mass = 0.5f;
+  data.mass = 1.5f;
   
   if (!CreateObject(obj, data)) {
     std::cout << "Failed to create cube object, aborting" << std::endl;

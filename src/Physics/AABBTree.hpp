@@ -35,10 +35,11 @@ private:
     unsigned left;
     unsigned right;
     bool leaf;
-    bool crossedChildren;
     bool active;
   };
 
+  void SelfQuery(Node& node, QueryResults& results);
+  void SelfQuery(Node& nodeA, Node& nodeB, QueryResults& results);
   void Insert(unsigned key);
   void Reshape(unsigned key);
 
@@ -48,7 +49,7 @@ private:
   void ReleaseNode(unsigned key);
   Node& Nodes(unsigned key);
   unsigned Erase(unsigned key);
-  float Heuristic(const AABB& aabb1, const AABB& aabb2);
+  float Heuristic(const AABB& insertedNode, const AABB& possiblePartner);
 
   const float mPad;
   unsigned mRoot;
