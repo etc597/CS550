@@ -53,6 +53,21 @@ bool PhysicsSystem::Init()
 
 void PhysicsSystem::Update(float dt)
 {
+  const float fixedStep = (1.0f / 144.0f);
+  while (dt > 0)
+  {
+    InternalUpdate(fixedStep);
+    dt -= fixedStep;
+  }
+}
+
+void PhysicsSystem::Deinit()
+{
+  mBodies.clear();
+}
+
+void PhysicsSystem::InternalUpdate(float dt)
+{
   for (auto& body : mBodies) {
     body.second.Update(dt);
   }
@@ -64,6 +79,14 @@ void PhysicsSystem::Update(float dt)
 
   mBroadPhase.SelfQuery(mResults);
 
+  for (auto& result : mResults)
+  {
+    // GJK(result.mDataPair);
+  }
+}
+
+void PhysicsSystem::DebugDrawBroadPhase()
+{
   auto drawfn = [this](const AABB& aabb, unsigned key) {
     auto it = std::find_if(mResults.begin(), mResults.end(), [key](const QueryResult& pair) {
       if (pair.mKeyPair.first == key || pair.mKeyPair.second == key) {
@@ -79,15 +102,5 @@ void PhysicsSystem::Update(float dt)
     }
   };
 
-  for (auto& result : mResults)
-  {
-    // GJK(result.mDataPair);
-  }
-
   mBroadPhase.DebugDraw(drawfn);
-}
-
-void PhysicsSystem::Deinit()
-{
-  mBodies.clear();
 }

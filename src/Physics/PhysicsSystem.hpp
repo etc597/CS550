@@ -22,6 +22,9 @@ public:
   void Deinit();
 
 private:
+  void InternalUpdate(float dt);
+  void DebugDrawBroadPhase();
+
   Engine * mEngine;
   AABBTree mBroadPhase;
   QueryResults mResults;
