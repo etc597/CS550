@@ -47,6 +47,7 @@ Triangle::Triangle(const glm::vec3 & pointA, const glm::vec3 & pointB, const glm
   : a(pointA)
   , b(pointB)
   , c(pointC)
+  , n(glm::cross(b - a, c - a))
 {
 }
 
@@ -54,7 +55,7 @@ bool BarycentricCoords(const glm::vec3 & point, const Triangle & tri, uvw & resu
 {
   glm::vec3 Npbc = glm::cross(tri.b - point, tri.c - point);
   glm::vec3 Npca = glm::cross(tri.c - point, tri.a - point);
-  glm::vec3 N = glm::cross(tri.b - tri.a, tri.c - tri.a);
+  glm::vec3 N = tri.n;
 
   float area = glm::dot(N, N);
 
