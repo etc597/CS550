@@ -60,3 +60,12 @@ glm::vec3 SupportShape::Support(const glm::vec3 & worldDirection, const std::vec
   glm::vec4 largeResult = glm::vec4(result, 1);
   return loc2World * largeResult;
 }
+
+SupportPoint ComputeSupport(const SupportShape& shapeA, const SupportShape& shapeB, const glm::vec3& worldDir)
+{
+  SupportPoint result;
+  result.pointA = shapeA.Support(worldDir);
+  result.pointB = shapeB.Support(-worldDir);
+  result.csoPoint = result.pointA - result.pointB;
+  return result;
+}

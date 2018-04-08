@@ -4,6 +4,13 @@
 class Collider;
 class RigidBody;
 
+struct SupportPoint
+{
+  glm::vec3 csoPoint;
+  glm::vec3 pointA;
+  glm::vec3 pointB;
+};
+
 class SupportShape
 {
 public:
@@ -18,3 +25,5 @@ private:
   RigidBody* body;
   glm::vec3 center;
 };
+
+SupportPoint ComputeSupport(const SupportShape& shapeA, const SupportShape& shapeB, const glm::vec3& worldDir);
