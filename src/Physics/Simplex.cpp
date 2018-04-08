@@ -1,10 +1,12 @@
 #include "Simplex.hpp"
 #include "Math/BarycentricCoords.hpp"
 
-Simplex::Simplex(const glm::vec3& initPoint, const glm::vec3& initDir)
-  : closestPoint(initPoint)
+Simplex::Simplex(const SupportPoint& initPoint, const glm::vec3& initDir) 
+  : closestPoint(initPoint.csoPoint)
   , searchDir(initDir)
 {
+  size = 1;
+  simplex[0] = initPoint;
 }
 
 bool Simplex::AddPoint(SupportPoint& pointToAdd)

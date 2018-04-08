@@ -1,10 +1,13 @@
+#pragma once;
+
 #include <glm/glm.hpp>
 #include "Physics/SupportShape.hpp"
 
 class Simplex
 {
 public:
-  Simplex(const glm::vec3& initPoint, const glm::vec3& initDir);
+  Simplex() = default;
+  Simplex(const SupportPoint& initPoint, const glm::vec3& initDir);
   bool AddPoint(SupportPoint& pointToAdd);
   void Reduce(const glm::vec3& searchPoint = glm::vec3());
   const glm::vec3& GetClosestPoint() const;
