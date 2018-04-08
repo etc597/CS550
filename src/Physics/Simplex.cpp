@@ -1,4 +1,5 @@
 #include "Simplex.hpp"
+#include "Math/BarycentricCoords.hpp"
 
 Simplex::Simplex(SupportPoint & initPoint, const glm::vec3 & initDir)
 {
@@ -34,6 +35,7 @@ void Simplex::Reduce(const glm::vec3 & searchPoint)
     break;
   }
 
+  searchDir = searchPoint - closestPoint.csoPoint;
 
   for (size_t i = 0; i < newSize; ++i)
   {
@@ -71,13 +73,30 @@ SupportPoint Simplex::ReconstructPoint() const
 void Simplex::ReducePoint(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize)
 {
   closestPoint = simplex[0];
-  searchDir = searchPoint - closestPoint.csoPoint;
   newSize = 1;
   newIndices[0] = 0;
 }
 
 void Simplex::ReduceLine(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize)
 {
+  uv coords;
+  BarycentricCoords(searchPoint, Line(simplex[0].csoPoint, simplex[1].csoPoint), coords);
+
+  if (coords.v <= 0)
+  {
+    closestPoint = simplex[0];
+    newSize = 1;
+    newIndices[0] = 0;
+  }
+
+  if (coords.v >= 1)
+  {
+    closestPoint = simplex[1];
+    newSize = 1;
+    newIndices[0] = 1;
+  }
+
+  closestPoint = 
 }
 
 void Simplex::ReduceTriangle(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize)
