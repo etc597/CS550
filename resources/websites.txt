@@ -1,3 +1,4 @@
 https://en.wikipedia.org/wiki/Exterior_algebra
 https://en.wikipedia.org/wiki/Quaternion
 http://kmamou.blogspot.com/2011/10/hacd-hierarchical-approximate-convex.html
+https://en.wikipedia.org/wiki/Gilbert%E2%80%93Johnson%E2%80%93Keerthi_distance_algorithm
