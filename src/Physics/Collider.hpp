@@ -17,12 +17,14 @@ public:
   void DebugUpdate();
   void Update(float dt);
   const AABB& GetAABB();
+  const std::vector<glm::vec3>& GetLocalVerts();
 
   unsigned mKey;
 private:
   Object * mObject;
   Engine * mEngine;
   ELBA::Model * mModel;
+  std::vector<glm::vec3> localVerts;
 
   AABB mAABB;
 };

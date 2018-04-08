@@ -10,12 +10,14 @@ using namespace ELBA;
 
 bool Collider::Init(Object * object)
 {
+  localVerts.clear();
   mObject = object;
   mEngine = mObject->mEngine;
   mModel = mObject->mModel;
 
   std::vector<glm::vec3> points;
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
+    localVerts.push_back(vertex.mPos);
     glm::vec4 affinePt(vertex.mPos, 1);
     points.push_back(glm::vec3(affinePt.x, affinePt.y, affinePt.z));
   }
@@ -37,4 +39,9 @@ void Collider::Update(float dt)
 const AABB & Collider::GetAABB()
 {
   return mAABB;
+}
+
+const std::vector<glm::vec3>& Collider::GetLocalVerts()
+{
+  return localVerts;
 }
