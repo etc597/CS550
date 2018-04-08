@@ -40,6 +40,11 @@ void Simplex::Reduce(const glm::vec3 & searchPoint)
   }
 
   searchDir = searchPoint - closestPoint;
+  auto length = glm::length(searchDir);
+  if (length != 0)
+  {
+    searchDir /= length;
+  }
 
   for (size_t i = 0; i < newSize; ++i)
   {

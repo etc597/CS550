@@ -4,5 +4,8 @@
 #include "Physics/Simplex.hpp"
 #include "Physics/SupportShape.hpp"
 
-bool Intersect(const SupportShape& shapeA, const SupportShape& shapeB, Simplex& simplex, float epsilon)
+namespace GJK
+{
+  bool Intersect(const SupportShape& shapeA, const SupportShape& shapeB, Simplex& simplex, unsigned maxIter = 50, float epsilon = 0.001f);
+}
 
