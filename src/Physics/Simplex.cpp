@@ -76,6 +76,8 @@ SupportPoint Simplex::ReconstructPoint() const
   case 3:
     return ReconstructFromTriangle();
     break;
+  default:
+    return SupportPoint();
   }
 }
 

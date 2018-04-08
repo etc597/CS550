@@ -40,7 +40,7 @@ namespace ELBA
 
       number == ss.str();
 
-      aShader->SetFloat(("material." + name + number).c_str(), i);
+      aShader->SetFloat(("material." + name + number).c_str(), (float)i);
       glBindTexture(GL_TEXTURE_2D, mTextures[i].mID);
     }
 
