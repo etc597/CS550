@@ -118,9 +118,14 @@ void Polytope::Reduce()
   }
 }
 
-const Polytope::Triangle & Polytope::GetClosestTriangle()
+const Polytope::Triangle& Polytope::GetClosestTriangle() const
 {
   return triangles[closestTriIndex];
+}
+
+const SupportPoint & Polytope::GetVertex(unsigned vertIndex) const
+{
+  return vertices[vertIndex];
 }
 
 void Polytope::RecalculateTriangle(size_t triIndex)
