@@ -3,24 +3,37 @@
 #include "Physics/SupportShape.hpp"
 #include <vector>
 
-struct PolytopeTriangle
-{
-  size_t i, j, k; // indices into polytope vertices
-  glm::vec3 normal;
-  float distance;
-};
-
 class Polytope
 {
 public:
+  struct Edge
+  {
+    Edge() = default;
+    Edge(unsigned idx1, unsigned idx2) : i(idx1), j(idx2) {};
+    unsigned i;
+    unsigned j;
+  };
+
+  struct Triangle
+  {
+    Triangle() = default;
+    Triangle(unsigned idx1, unsigned idx2, unsigned idx3) : i(idx1), j(idx2), k(idx3) {};
+    unsigned i;
+    unsigned j;
+    unsigned k;
+    glm::vec3 normal;
+    float distance;
+  };
+
   Polytope() = default;
   Polytope(const Simplex& simplex);
   void AddVertex(const SupportPoint& support);
-  const PolytopeTriangle& GetClosestTriangle();
+  const Triangle& GetClosestTriangle();
 private:
-  void UpdateTriangle(size_t triIndex);
+  void RecalculateTriangle(size_t triIndex);
+  void RecalculateClosest();
   std::vector<SupportPoint> vertices;
-  std::vector<PolytopeTriangle> triangles;
+  std::vector<Triangle> triangles;
   size_t closestTriIndex;
-
+  float epsilon = 0.001f;
 };
