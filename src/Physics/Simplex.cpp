@@ -81,6 +81,11 @@ SupportPoint Simplex::ReconstructPoint() const
   }
 }
 
+const SupportPoint & Simplex::operator[](size_t i) const
+{
+  return simplex[i];
+}
+
 void Simplex::ReducePoint(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize)
 {
   // reduce to a point

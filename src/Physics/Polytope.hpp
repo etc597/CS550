@@ -18,6 +18,9 @@ public:
   void AddVertex(const SupportPoint& support);
   const PolytopeTriangle& GetClosestTriangle();
 private:
+  void UpdateTriangle(size_t triIndex);
   std::vector<SupportPoint> vertices;
+  std::vector<PolytopeTriangle> triangles;
+  size_t closestTriIndex;
 
 };

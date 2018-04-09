@@ -13,6 +13,7 @@ public:
   const glm::vec3& GetClosestPoint() const;
   const glm::vec3& GetSearchDir() const;
   SupportPoint ReconstructPoint() const;
+  const SupportPoint& operator[](size_t i) const;
 
 private:
   void ReducePoint(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize);
