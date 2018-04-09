@@ -28,6 +28,7 @@ public:
   Polytope() = default;
   Polytope(const Simplex& simplex);
   void AddVertex(const SupportPoint& support);
+  void Reduce();
   const Triangle& GetClosestTriangle();
 private:
   void RecalculateTriangle(size_t triIndex);

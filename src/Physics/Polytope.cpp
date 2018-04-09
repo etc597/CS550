@@ -35,14 +35,18 @@ Polytope::Polytope(const Simplex & simplex)
 void Polytope::AddVertex(const SupportPoint & support)
 {
   vertices.push_back(support);
+}
 
+void Polytope::Reduce()
+{
+  auto& newestPoint = vertices.back();
   std::queue<unsigned> trisToRemove;
   std::vector<Edge> edges;
   bool dirtyClosest = false;
   for (unsigned i = 0; i < triangles.size(); ++i)
   {
     auto& tri = triangles[i];
-    if (glm::dot(tri.normal, support.csoPoint - vertices[tri.i].csoPoint) > 0.0f)
+    if (glm::dot(tri.normal, newestPoint.csoPoint - vertices[tri.i].csoPoint) > 0.0f)
     {
       // mark this tri as needing to be removed
       trisToRemove.push(i);
@@ -65,8 +69,8 @@ void Polytope::AddVertex(const SupportPoint & support)
     // get the points of the triangle (edge i, j are points a and b. support is point c)
     const glm::vec3& a = vertices[edge.i].csoPoint;
     const glm::vec3& b = vertices[edge.j].csoPoint;
-    const glm::vec3& c = support.csoPoint;
-    
+    const glm::vec3& c = newestPoint.csoPoint;
+
     // skip degenerate triangles (tri normal is 0, dist b/t points is small)
     auto n = glm::cross(b - a, c - a);
     if (glm::dot(n, n) < epsilon)
@@ -95,13 +99,13 @@ void Polytope::AddVertex(const SupportPoint & support)
     }
 
     triangles[newIndex] = Triangle(edge.i, edge.j, vertices.size());
-    
+
     // update the new triangle 
     RecalculateTriangle(newIndex);
   }
 
   // delete all the remaining old triangles
-  while(!trisToRemove.empty())
+  while (!trisToRemove.empty())
   {
     triangles.erase(triangles.begin() + trisToRemove.front());
     trisToRemove.pop();

@@ -5,7 +5,7 @@ void EPA::Expand(const SupportShape & shapeA, const SupportShape & shapeB, Polyt
   unsigned iter = 0;
   while (iter < maxIter)
   {
-    PolytopeTriangle tri = polytope.GetClosestTriangle();
+    Polytope::Triangle tri = polytope.GetClosestTriangle();
     SupportPoint point = ComputeSupport(shapeA, shapeB, tri.normal);
 
     // if the new point is no closer than the closest tri, stop
@@ -16,6 +16,7 @@ void EPA::Expand(const SupportShape & shapeA, const SupportShape & shapeB, Polyt
     }
 
     polytope.AddVertex(point);
+    polytope.Reduce();
     ++iter;
   }
 }
