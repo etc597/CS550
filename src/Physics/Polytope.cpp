@@ -105,12 +105,14 @@ void Polytope::Reduce()
   }
 
   // delete all the remaining old triangles
+  int offset = 0;
   while (!trisToRemove.empty())
   {
     unsigned triToRemoveIndex = trisToRemove.front();
-    auto iterToRemove = triangles.begin() + triToRemoveIndex;
+    auto iterToRemove = triangles.begin() + triToRemoveIndex - offset;
     triangles.erase(iterToRemove);
     trisToRemove.pop();
+    ++offset;
   }
 
   // if the cloeset point was deleted, search for it again
