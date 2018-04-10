@@ -32,10 +32,10 @@ void Simplex::Reduce(const glm::vec3 & searchPoint)
     ReduceLine(searchPoint, newIndices, newSize);
     break;
   case 3:
-    ReduceTriangle(searchPoint, newIndices, size);
+    ReduceTriangle(searchPoint, newIndices, newSize);
     break;
   case 4:
-    ReduceTetrahedron(searchPoint, newIndices, size);
+    ReduceTetrahedron(searchPoint, newIndices, newSize);
     break;
   }
 
