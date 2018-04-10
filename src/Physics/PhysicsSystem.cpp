@@ -94,7 +94,7 @@ void PhysicsSystem::InternalUpdate(float dt)
     // generate contact information
     if (res)
     {
-      Polytope polytope;
+      Polytope polytope(simplexResult);
       EPA::Expand(shapeA, shapeB, polytope);
 
       // probably need to be doing more than this

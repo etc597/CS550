@@ -25,8 +25,8 @@ Polytope::Polytope(const Simplex & simplex)
     tri.i = simplexTris[i][0];
     tri.j = simplexTris[i][1];
     tri.k = simplexTris[i][2];
-    RecalculateTriangle(i);
     triangles.push_back(tri);
+    RecalculateTriangle(i);
   }
 
   RecalculateClosest();
