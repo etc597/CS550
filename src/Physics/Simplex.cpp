@@ -127,7 +127,7 @@ void Simplex::ReduceLine(const glm::vec3& searchPoint, int newIndices[4], size_t
 void Simplex::ReduceTriangle(const glm::vec3& searchPoint, int newIndices[4], size_t& newSize)
 {
   Line line_p0p1(simplex[0].csoPoint, simplex[1].csoPoint);
-  Line line_p1p2(simplex[0].csoPoint, simplex[1].csoPoint);
+  Line line_p1p2(simplex[1].csoPoint, simplex[2].csoPoint);
   Line line_p2p0(simplex[2].csoPoint, simplex[0].csoPoint);
 
   uv uv_p0p1;

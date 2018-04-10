@@ -109,16 +109,22 @@ void Polytope::Reduce()
   while (!trisToRemove.empty())
   {
     unsigned triToRemoveIndex = trisToRemove.front();
-    auto iterToRemove = triangles.begin() + triToRemoveIndex - offset;
+    auto iterToRemove = triangles.begin() + (triToRemoveIndex - offset);
     triangles.erase(iterToRemove);
     trisToRemove.pop();
     ++offset;
   }
 
+
   // if the cloeset point was deleted, search for it again
   if (dirtyClosest)
   {
+    closestTriIndex = 0;
     RecalculateClosest();
+  }
+  else
+  {
+    closestTriIndex -= offset;
   }
 }
 
