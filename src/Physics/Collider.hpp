@@ -22,8 +22,8 @@ public:
   const SupportShape& GetCollisionShape() const;
 
   unsigned mKey;
-private:
   Object * mObject;
+private:
   Engine * mEngine;
   ELBA::Model * mModel;
   std::vector<glm::vec3> localVerts;

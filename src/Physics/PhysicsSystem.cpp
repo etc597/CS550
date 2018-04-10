@@ -99,6 +99,8 @@ void PhysicsSystem::InternalUpdate(float dt)
 
       // probably need to be doing more than this
       Contact contactData;
+      contactData.bodies[0] = result.mDataPair.first->mObject->mRigidBody;
+      contactData.bodies[1] = result.mDataPair.second->mObject->mRigidBody;
       CreateContact(polytope, contactData);
       manifold.push_back(contactData);
     }

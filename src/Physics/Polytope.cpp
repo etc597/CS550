@@ -98,7 +98,7 @@ void Polytope::Reduce()
       trisToRemove.pop();
     }
 
-    triangles[newIndex] = Triangle(edge.i, edge.j, vertices.size());
+    triangles[newIndex] = Triangle(edge.i, edge.j, vertices.size() - 1);
 
     // update the new triangle 
     RecalculateTriangle(newIndex);
@@ -107,7 +107,9 @@ void Polytope::Reduce()
   // delete all the remaining old triangles
   while (!trisToRemove.empty())
   {
-    triangles.erase(triangles.begin() + trisToRemove.front());
+    unsigned triToRemoveIndex = trisToRemove.front();
+    auto iterToRemove = triangles.begin() + triToRemoveIndex;
+    triangles.erase(iterToRemove);
     trisToRemove.pop();
   }
 
