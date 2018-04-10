@@ -5,6 +5,8 @@
 #include <algorithm>
 
 SupportShape::SupportShape(Collider * supportModel, RigidBody * rigidBody)
+  : obj(supportModel)
+  , body(rigidBody)
 {
 }
 

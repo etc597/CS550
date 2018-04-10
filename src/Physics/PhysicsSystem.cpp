@@ -2,6 +2,9 @@
 #include "Core/Engine.hpp"
 #include "Graphics/GraphicsSystem.hpp"
 #include "Physics/AABB.hpp"
+#include "Physics/GJK.hpp"
+#include "Physics/EPA.hpp"
+#include "Physics/ContactManifold.hpp"
 
 PhysicsSystem::PhysicsSystem(Engine * engine)
   : mEngine(engine)
@@ -79,9 +82,26 @@ void PhysicsSystem::InternalUpdate(float dt)
 
   mBroadPhase.SelfQuery(mResults);
 
+  std::vector<Contact> manifold;
   for (auto& result : mResults)
   {
-    // GJK(result.mDataPair);
+    Simplex simplexResult;
+    auto shapeA = result.mDataPair.first->GetCollisionShape();
+    auto shapeB = result.mDataPair.second->GetCollisionShape();
+
+    auto res = GJK::Intersect(shapeA, shapeB, simplexResult);
+    
+    // generate contact information
+    if (res)
+    {
+      Polytope polytope;
+      EPA::Expand(shapeA, shapeB, polytope);
+
+      // probably need to be doing more than this
+      Contact contactData;
+      CreateContact(polytope, contactData);
+      manifold.push_back(contactData);
+    }
   }
 }
 

@@ -2,6 +2,7 @@
 #define Physics_Collider_hpp
 
 #include "Physics/AABB.hpp"
+#include "Physics/SupportShape.hpp"
 
 class Engine;
 class Object;
@@ -18,6 +19,7 @@ public:
   void Update(float dt);
   const AABB& GetAABB();
   const std::vector<glm::vec3>& GetLocalVerts();
+  const SupportShape& GetCollisionShape() const;
 
   unsigned mKey;
 private:
@@ -27,6 +29,7 @@ private:
   std::vector<glm::vec3> localVerts;
 
   AABB mAABB;
+  SupportShape collisionShape;
 };
 
 #endif

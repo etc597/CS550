@@ -23,6 +23,8 @@ bool Collider::Init(Object * object)
   }
   mAABB.Compute(points);
 
+  collisionShape = SupportShape(this, mObject->mRigidBody);
+
   return true;
 }
 
@@ -44,4 +46,9 @@ const AABB & Collider::GetAABB()
 const std::vector<glm::vec3>& Collider::GetLocalVerts()
 {
   return localVerts;
+}
+
+const SupportShape & Collider::GetCollisionShape() const
+{
+  return collisionShape;
 }

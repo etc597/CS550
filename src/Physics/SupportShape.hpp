@@ -15,6 +15,7 @@ struct SupportPoint
 class SupportShape
 {
 public:
+  SupportShape() = default;
   SupportShape(Collider* supportModel, RigidBody* rigidBody);
   glm::vec3 GetCenter() const;
   glm::vec3 Support(const glm::vec3& worldDirection) const;
