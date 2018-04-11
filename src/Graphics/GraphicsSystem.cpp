@@ -334,12 +334,12 @@ void GraphicsSystem::Draw()
   auto objects = mEngine->GetObjects();
 
   // Draw objects
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  for (auto& obj : objects) {
-    mShaders[0].SetMat4("model", obj.GetModelMatrix());
-    mShaders[0].SetVec3("obj_color", obj.mColor);
-    obj.mModel->Draw(&mShaders[0]);
-  }
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  //for (auto& obj : objects) {
+  //  mShaders[0].SetMat4("model", obj.GetModelMatrix());
+  //  mShaders[0].SetVec3("obj_color", obj.mColor);
+  //  obj.mModel->Draw(&mShaders[0]);
+  //}
 
   // Draw lines
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

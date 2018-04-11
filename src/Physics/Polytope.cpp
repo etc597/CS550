@@ -1,6 +1,12 @@
 #include "Polytope.hpp"
 #include <queue>
 
+float distSq(glm::vec3 p0, glm::vec3 p1)
+{
+  auto vec = p1 - p0;
+  return glm::dot(vec, vec);
+}
+
 Polytope::Polytope(const Simplex & simplex)
   : closestTriIndex(0)
 {
@@ -78,9 +84,9 @@ void Polytope::Reduce()
       continue;
     }
 
-    if (glm::dot(a, b) < epsilon
-      || glm::dot(b, c) < epsilon
-      || glm::dot(c, a) < epsilon)
+    if (distSq(a, b) < epsilon
+      || distSq(b, c) < epsilon
+      || distSq(c, a) < epsilon)
     {
       continue;
     }

@@ -8,6 +8,33 @@ Contact CreateContact(const Polytope & polytope)
   return newContact;
 }
 
+ContactType DetermineContactType(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+{
+  auto ab = glm::dot(a - b, a - b);
+  auto ac = glm::dot(a - c, a - c);
+  auto bc = glm::dot(b - c, b - c);
+
+  float epsilon = 0.001f;
+  if (ab > epsilon)
+  {
+    // if the other edges have length, we are a face
+    if (ac > epsilon && bc > epsilon)
+    {
+      return ContactType::Face;
+    }
+    return ContactType::Edge;
+  }
+  else
+  {
+    // if at least one edge has length, we are a edge
+    if (ac > epsilon || bc > epsilon)
+    {
+      return ContactType::Edge;
+    }
+    return ContactType::Point;
+  }
+}
+
 void CreateContact(const Polytope & polytope, Contact & contactResults)
 {
   auto& tri = polytope.GetClosestTriangle();
@@ -20,19 +47,17 @@ void CreateContact(const Polytope & polytope, Contact & contactResults)
   BarycentricCoords(resultPoint, Triangle(p0.csoPoint, p1.csoPoint, p2.csoPoint), coords);
   
   // determine feature type here based on p0.a, ... and p0.b, ...
+  contactResults.contacts[0].type = DetermineContactType(p0.pointA, p1.pointA, p2.pointA);
+  contactResults.contacts[1].type = DetermineContactType(p0.pointB, p1.pointB, p2.pointB);
   
+  // all of these are in world space and not in local space
   contactResults.contacts[0].point = ConstructPoint(coords, Triangle(p0.pointA, p1.pointA, p2.pointA));
   contactResults.contacts[1].point = ConstructPoint(coords, Triangle(p0.pointB, p1.pointB, p2.pointB));
 
   contactResults.contacts[0].normal = -tri.normal;
   contactResults.contacts[1].normal = tri.normal;
 
-  //auto normalA = -tri.normal; // recompute normal from points in a / b instead???
-  // auto normalB = a2b * vec4(tri.normal, 0); ???
-
-  // world space version of contact point
-  contactResults.point = contactResults.bodies[0]->GetModelMatrix()
-    * glm::vec4(contactResults.contacts[0].point, 1.0f);
-  contactResults.normal = contactResults.bodies[0]->GetModelMatrix()
-    * glm::vec4(contactResults.contacts[0].normal, 0.0f);
+  // world space version of contact point (ironic that they're already in world space)
+  contactResults.point = contactResults.contacts[0].point;
+  contactResults.normal = contactResults.contacts[0].normal;
 }

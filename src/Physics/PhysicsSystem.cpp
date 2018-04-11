@@ -108,6 +108,8 @@ void PhysicsSystem::InternalUpdate(float dt)
       contactData.bodies[1] = result.mDataPair.second->mObject->mRigidBody;
       CreateContact(polytope, contactData);
       manifold.push_back(contactData);
+      mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[0].point + 0.5f * contactData.contacts[0].normal, glm::vec3(1, 0, 0.0f), true);
+      mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[1].point + 0.5f * contactData.contacts[1].normal, glm::vec3(0, 1, 0.0f), true);
     }
   }
 }
