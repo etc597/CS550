@@ -1,7 +1,10 @@
+#pragma once
+
 #ifndef Physics_PhysicsSystem_hpp
 #define Physics_PhysicsSystem_hpp
 
 #include <unordered_map>
+#include <vector>
 
 #include "Physics/AABBTree.hpp"
 #include "Physics/Collider.hpp"
