@@ -4,7 +4,6 @@
 #include "Physics/AABB.hpp"
 #include "Physics/GJK.hpp"
 #include "Physics/EPA.hpp"
-#include "Physics/ContactManifold.hpp"
 
 #include <iostream>
 
@@ -112,10 +111,18 @@ void PhysicsSystem::InternalUpdate(float dt)
       //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[1].point, contactData.contacts[1].point + 0.5f * contactData.contacts[1].normal, glm::vec3(0, 1, 0.0f), true);
     }
   }
+  mManifold = manifold;
 
   // resolve contacts (probably thread this too once you do that)
-  // ???????
-  // look at cato stuff
+  ResolveContacts();
+}
+
+void PhysicsSystem::ResolveContacts()
+{
+  for (auto& contact : mManifold)
+  {
+
+  }
 }
 
 void PhysicsSystem::DebugDrawBroadPhase()

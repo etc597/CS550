@@ -5,6 +5,7 @@
 
 #include "Physics/AABBTree.hpp"
 #include "Physics/Collider.hpp"
+#include "Physics/ContactManifold.hpp"
 #include "Physics/RigidBody.hpp"
 
 class Engine;
@@ -23,6 +24,7 @@ public:
 
 private:
   void InternalUpdate(float dt);
+  void ResolveContacts();
   void DebugDrawBroadPhase();
 
   Engine * mEngine;
@@ -30,6 +32,7 @@ private:
   QueryResults mResults;
   std::unordered_map<Object*, RigidBody> mBodies;
   std::unordered_map<Object*, Collider> mColliders;
+  std::vector<Contact> mManifold;
 };
 
 #endif
