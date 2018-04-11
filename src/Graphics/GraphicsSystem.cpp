@@ -184,6 +184,8 @@ void GraphicsSystem::MouseCallback(GLFWwindow * window, double xpos, double ypos
     front.y = sin(glm::radians(mCamera.mPitch));
     front.z = cos(glm::radians(mCamera.mPitch)) * sin(glm::radians(mCamera.mYaw));
     mCamera.mCameraFront = glm::normalize(front);
+    mCamera.mCameraRight = glm::normalize(glm::cross(mCamera.mWorldUp, mCamera.mCameraFront));
+    mCamera.mCameraUp = glm::cross(mCamera.mCameraFront, mCamera.mCameraRight);
   }
   lastX = xpos;
   lastY = ypos;
@@ -308,9 +310,9 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
       mCamera.mPosition -= cameraSpeed * mCamera.mCameraFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-      mCamera.mPosition -= glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+      mCamera.mPosition += mCamera.mCameraRight * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-      mCamera.mPosition += glm::normalize(glm::cross(mCamera.mCameraFront, mCamera.mCameraUp)) * cameraSpeed;
+      mCamera.mPosition -= mCamera.mCameraRight * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
       mCamera.mPosition += cameraSpeed * mCamera.mCameraUp;
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
