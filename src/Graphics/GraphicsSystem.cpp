@@ -302,7 +302,7 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
   if (mCamera.mMove) {
     float cameraSpeed = 5.0f * dt; // adjust accordingly
 
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
       cameraSpeed *= 10.0f;
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -315,7 +315,7 @@ void GraphicsSystem::ProcessInput(GLFWwindow * window, float dt)
       mCamera.mPosition -= mCamera.mCameraRight * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
       mCamera.mPosition += cameraSpeed * mCamera.mCameraUp;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
       mCamera.mPosition -= cameraSpeed * mCamera.mCameraUp;
   }
 
