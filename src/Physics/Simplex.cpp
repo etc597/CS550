@@ -284,7 +284,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
   BarycentricCoords(searchPoint, tri_p1p2p3, uvw_p1p2p3);
 
   // reduce to a line
-  if (uv_p0p1.u > 0 && uv_p0p1.v > 0 && uvw_p0p1p2.w < 0 && uvw_p0p1p3.w < 0)
+  if (uv_p0p1.u > 0 && uv_p0p1.v > 0 && uvw_p0p1p2.w < 0 && uvw_p0p1p3.w <= 0)
   {
     closestPoint = ConstructPoint(uv_p0p1, line_p0p1);
     newSize = 2;
@@ -293,7 +293,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
     return;
   }
 
-  if (uv_p0p2.u > 0 && uv_p0p2.v > 0 && uvw_p0p1p2.v < 0 && uvw_p0p2p3.w < 0)
+  if (uv_p0p2.u > 0 && uv_p0p2.v > 0 && uvw_p0p1p2.v < 0 && uvw_p0p2p3.w <= 0)
   {
     closestPoint = ConstructPoint(uv_p0p2, line_p0p2);
     newSize = 2;
@@ -302,7 +302,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
     return;
   }
 
-  if (uv_p0p3.u > 0 && uv_p0p3.v > 0 && uvw_p0p1p3.v < 0 && uvw_p0p2p3.v < 0)
+  if (uv_p0p3.u > 0 && uv_p0p3.v > 0 && uvw_p0p1p3.v < 0 && uvw_p0p2p3.v <= 0)
   {
     closestPoint = ConstructPoint(uv_p0p3, line_p0p3);
     newSize = 2;
@@ -311,7 +311,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
     return;
   }
 
-  if (uv_p1p2.u > 0 && uv_p1p2.v > 0 && uvw_p0p1p2.u < 0 && uvw_p1p2p3.w < 0)
+  if (uv_p1p2.u > 0 && uv_p1p2.v > 0 && uvw_p0p1p2.u < 0 && uvw_p1p2p3.w <= 0)
   {
     closestPoint = ConstructPoint(uv_p1p2, line_p1p2);
     newSize = 2;
@@ -320,7 +320,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
     return;
   }
 
-  if (uv_p1p3.u > 0 && uv_p1p3.v > 0 && uvw_p0p1p3.u < 0 && uvw_p1p2p3.v < 0)
+  if (uv_p1p3.u > 0 && uv_p1p3.v > 0 && uvw_p0p1p3.u < 0 && uvw_p1p2p3.v <= 0)
   {
     closestPoint = ConstructPoint(uv_p1p3, line_p1p3);
     newSize = 2;
@@ -329,7 +329,7 @@ void Simplex::ReduceTetrahedron(const glm::vec3& searchPoint, int newIndices[4],
     return;
   }
 
-  if (uv_p2p3.u > 0 && uv_p2p3.v > 0 && uvw_p0p2p3.u < 0 && uvw_p1p2p3.u < 0)
+  if (uv_p2p3.u > 0 && uv_p2p3.v > 0 && uvw_p0p2p3.u < 0 && uvw_p1p2p3.u <= 0)
   {
     closestPoint = ConstructPoint(uv_p2p3, line_p2p3);
     newSize = 2;
