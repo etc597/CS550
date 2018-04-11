@@ -62,4 +62,7 @@ void CreateContact(const Polytope & polytope, Contact & contactResults)
   // world space version of contact point (ironic that they're already in world space)
   contactResults.point = contactResults.contacts[0].point;
   contactResults.normal = contactResults.contacts[0].normal;
+
+  contactResults.depth = glm::dot(contactResults.contacts[0].point - contactResults.contacts[1].point, contactResults.normal);
+
 }
