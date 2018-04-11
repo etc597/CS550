@@ -83,7 +83,6 @@ void PhysicsSystem::InternalUpdate(float dt)
   }
 
   mBroadPhase.SelfQuery(mResults);
-  std::cout << " --------- " << std::endl;
   std::vector<Contact> manifold;
   for (auto& result : mResults)
   {
@@ -96,9 +95,6 @@ void PhysicsSystem::InternalUpdate(float dt)
     // generate contact information
     if (res)
     {
-      auto nameA = result.mDataPair.first->mObject->mName;
-      auto nameB = result.mDataPair.second->mObject->mName;
-      std::cout << nameA << " and " << nameB << " collide" << std::endl;
       Polytope polytope(simplexResult);
       EPA::Expand(shapeA, shapeB, polytope);
 
