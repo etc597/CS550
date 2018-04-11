@@ -2,8 +2,9 @@
 #include "Core/Engine.hpp"
 #include "Graphics/GraphicsSystem.hpp"
 #include "Physics/AABB.hpp"
-#include "Physics/GJK.hpp"
+#include "Physics/ContactResolver.hpp"
 #include "Physics/EPA.hpp"
+#include "Physics/GJK.hpp"
 
 #include <iostream>
 
@@ -121,14 +122,7 @@ void PhysicsSystem::ResolveContacts()
 {
   for (auto& contact : mManifold)
   {
-    // make sure penetration is valid and then cross normals with world pos points
-    // create the jacobian from the contact
-    // get the mass matrix / inertia tensor thing M
-    // get the bias value b
-    // get the acceleration value (needs dt) ???
-    // solve the normal constraint
-      // evaluate delta lambda and add it to lambda
-      // when delta lambda is small or we hit max iter, apply impulse
+    ContactResolver::ResolveContact(contact);
   }
 }
 
