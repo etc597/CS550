@@ -73,6 +73,7 @@ void PhysicsSystem::Deinit()
 
 void PhysicsSystem::InternalUpdate(float dt)
 {
+  // TODO(Evan): multi thread body and col updates (can do both per job)
   for (auto& body : mBodies) {
     body.second.Update(dt);
   }
@@ -84,6 +85,8 @@ void PhysicsSystem::InternalUpdate(float dt)
 
   mBroadPhase.SelfQuery(mResults);
   std::vector<Contact> manifold;
+  // TODO(Evan): multi-thread collision detection and contact manifold stuff
+  // don't forget to make adding to the manifold thread safe!
   for (auto& result : mResults)
   {
     Simplex simplexResult;
@@ -104,10 +107,15 @@ void PhysicsSystem::InternalUpdate(float dt)
       contactData.bodies[1] = result.mDataPair.second->mObject->mRigidBody;
       CreateContact(polytope, contactData);
       manifold.push_back(contactData);
-      mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[0].point + 0.5f * contactData.contacts[0].normal, glm::vec3(1, 0, 0.0f), true);
-      mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[1].point + 0.5f * contactData.contacts[1].normal, glm::vec3(0, 1, 0.0f), true);
+      mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.point, contactData.point + 0.5f * contactData.normal, glm::vec3(1, 0, 0.0f), true);
+      //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[0].point + 0.5f * contactData.contacts[0].normal, glm::vec3(1, 0, 0.0f), true);
+      //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[1].point, contactData.contacts[1].point + 0.5f * contactData.contacts[1].normal, glm::vec3(0, 1, 0.0f), true);
     }
   }
+
+  // resolve contacts (probably thread this too once you do that)
+  // ???????
+  // look at cato stuff
 }
 
 void PhysicsSystem::DebugDrawBroadPhase()

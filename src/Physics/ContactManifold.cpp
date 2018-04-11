@@ -51,11 +51,13 @@ void CreateContact(const Polytope & polytope, Contact & contactResults)
   contactResults.contacts[1].type = DetermineContactType(p0.pointB, p1.pointB, p2.pointB);
   
   // all of these are in world space and not in local space
+  // aka if we need them to be in local space, we need to transform them with the inverse model matrix
+  // TODO(Evan): make these local space and calculate the separating dist
   contactResults.contacts[0].point = ConstructPoint(coords, Triangle(p0.pointA, p1.pointA, p2.pointA));
   contactResults.contacts[1].point = ConstructPoint(coords, Triangle(p0.pointB, p1.pointB, p2.pointB));
 
-  contactResults.contacts[0].normal = -tri.normal;
-  contactResults.contacts[1].normal = tri.normal;
+  contactResults.contacts[0].normal = tri.normal;
+  contactResults.contacts[1].normal = -tri.normal;
 
   // world space version of contact point (ironic that they're already in world space)
   contactResults.point = contactResults.contacts[0].point;
