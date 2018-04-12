@@ -74,12 +74,12 @@ namespace ContactResolver
     jacobian.Transform(vRel, velocity);
     float restitution = 0.1f;
     float baumgarte = 0.5f;
-    if (vRel < 0.0f)
+    if (vRel > 0.0f)
     {
-      bias += std::min(-vRel, 1.0f) * vRel * restitution;
+      bias += vRel * restitution;
     }
     // baumgarte stability
-    bias += std::min(penetration, 0.0f) * baumgarte * effectiveMassInv;
+    bias += penetration * baumgarte;
 
     // get the acceleration value (needs dt) - [J * v0 / dt] + [J * M-1 * Fext] 
     Jacobian::Pair a[2];
@@ -95,8 +95,8 @@ namespace ContactResolver
 
     // determine target impulse
     float externalAccel;
-     jacobian.Transform(externalAccel, a);
-    float eta = -externalAccel - (bias / dt);
+    jacobian.Transform(externalAccel, a);
+    float eta = -externalAccel + (bias / dt);
 
     float lambda = 0.0f;
     float delta_lambda;
@@ -116,7 +116,10 @@ namespace ContactResolver
       delta_lambda = (eta - jImpulse) * effectiveMass;
       float old_lambda = lambda;
       lambda += delta_lambda;
-      if (lambda < 0.0f) lambda = 0.0f;
+      if (lambda < 0.0f)
+      {
+        lambda = 0.0f;
+      }
       delta_lambda = lambda - old_lambda;
       // when delta lambda is small or we hit max iter, apply impulse
       if (delta_lambda != 0.0f)

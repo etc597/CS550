@@ -56,7 +56,7 @@ bool Engine::Init()
     obj.mColor = glm::vec3(0.5f + 0.5f * (1.0f / NUM_SPHERES * i), 1.0f / NUM_SPHERES * i, 1.0f - (1.0f / NUM_SPHERES * i));
 
     data.x = glm::vec3(10 * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, 10 * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
-    data.P = - 0.5f * data.x;
+    data.P = - 0.25f * data.x;
     data.P.y = 0;
     data.mass = 1.0f;
 
