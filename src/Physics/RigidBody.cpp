@@ -97,7 +97,7 @@ void RigidBody::Update(float dt)
   }
   mAppliedForces.clear();
 
-  P = P + force * dt;
+  P = P + force * dt + linearImpulse * mass * dt;
   v = P / mass;
   a = force / mass;
 
@@ -105,7 +105,7 @@ void RigidBody::Update(float dt)
   x = x + deltaX;
 
 
-  L = L + torque * dt;
+  L = L + torque * dt + glm::inverse(Iinv) * angularImpulse * dt;
   w = Iinv * L;
   wp = Iinv * torque;
 
@@ -114,6 +114,9 @@ void RigidBody::Update(float dt)
 
   deltaQ = qdot * dt;// +0.5f * qdotdot * dt * dt;
   q += deltaQ;
+
+  linearImpulse = glm::vec3(0, 0, 0);
+  angularImpulse = glm::vec3(0, 0, 0);
 }
 
 void RigidBody::ApplyForce(glm::vec3 force, glm::vec3 pos)
