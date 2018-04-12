@@ -13,6 +13,7 @@ namespace ContactResolver
 
     void Transform(float& lambda, const Pair v[2]) const;
     void Transform(Pair v[2], float lambda) const;
+    void CalculateEffectiveMassInverse(float& effectiveMassInv, float massInv[2], glm::mat3 tensorInv[2]);
 
     Pair pairs[2];
   };
