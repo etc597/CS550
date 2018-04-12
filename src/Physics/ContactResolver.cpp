@@ -37,8 +37,8 @@ namespace ContactResolver
     // make sure penetration is valid and then cross normals with world pos points
     float penetration = contact.depth;
     glm::vec3 n = contact.normal;
-    glm::vec3 axn = glm::cross(contact.contacts[0].point, n);
-    glm::vec3 bxn = glm::cross(contact.contacts[1].point, n);
+    glm::vec3 axn = glm::cross(contact.contacts[0].point, n); // should be point - objPos
+    glm::vec3 bxn = glm::cross(contact.contacts[1].point, n); // should be point - objPos
 
     // create the jacobian from the contact
     Jacobian jacobian;
@@ -102,7 +102,7 @@ namespace ContactResolver
     float delta_lambda;
     // solve the normal constraint
     unsigned iter = 0;
-    while (iter < 50) 
+    while (iter < 50) // 50 could potentially be a bit high
     {
       // evaluate delta lambda and add it to lambda
       float jImpulse;
@@ -132,6 +132,8 @@ namespace ContactResolver
       }
       ++iter;
     }
+
+    // friction is same, just jacobian with tangent and bitangent and then clamp to [-constant, +constant]
 
     // if we want friction here, repeat process but jacobian uses tangent vecs t1 and t2
   }

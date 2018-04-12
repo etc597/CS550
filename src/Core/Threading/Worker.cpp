@@ -73,7 +73,7 @@ void Worker::Run()
 void Worker::YieldThread()
 {
   // TODO (Evan): Time tasks to figure out sleep length
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
+  std::this_thread::sleep_for(std::chrono::microseconds(50));
 }
 
 void Worker::ExecuteNext()
