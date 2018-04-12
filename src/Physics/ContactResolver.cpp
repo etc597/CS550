@@ -75,3 +75,7 @@ void ContactResolver::ResolveContact(Contact & contact)
       // apply impulse and bail
     }
 }
+
+// apply impulse
+  // jacobian.transform(delta_impulse, delta_lambda)
+  // bodies[i]->add_impulse(mass_matrix_inv[i] * delta_impulse[i]);
