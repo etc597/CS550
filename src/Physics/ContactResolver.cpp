@@ -29,12 +29,17 @@ void ContactResolver::ResolveContact(Contact& contact, float dt)
   float effectiveMassInv;// = jacobian.effectiveMass(massInv, tensorInv);
   float effectiveMass = effectiveMassInv != 0.0f ? 1.0f / effectiveMassInv : 0.0f;
 
+  auto& bodies = contact.bodies;
   // get the bias value b
   float bias = 0.0f;
   float vRel = -1.0f;
-  // auto vel_a = bodies[0]->GetVelocity();
-  // auto vel_b = bodies[1]->GetVelocity();
-  // jacobian.transform(vRel, vel_a, vel_b, 0);
+  Jacobian::Pair velocity[2];
+  for (unsigned i = 0; i < 2; ++i)
+  {
+    velocity[i].linear = bodies[i]->GetLinearVelocity();
+    velocity[i].angular = bodies[i]->GetAngularVelocity();
+
+  // jacobian.transform(vRel, velocity);
   if(vRel < 0.0f)
   {
     // bias += std::min(-vRel, 1.0f) * vRel * restitution;
@@ -46,9 +51,10 @@ void ContactResolver::ResolveContact(Contact& contact, float dt)
   Jacobian::Pair a[2];
   for (unsigned i = 0; i < 2; ++i)
   {
-    // a[i] = mass_matrix_inv[i] * bodies[i]->GetForces();
-    // something something bodies[i]->GetTorques();
-    // a[i] += bodies[i]->GetVelocity() / dt;
+    a[i].linear = massInv[i] * bodies[i]->GetForces();
+    a[i].angular = tensorInv[i] * bodies[i]->GetTorques();
+    a[i].linear += bodies[i]->GetLinearVelocity() / dt;
+    a[i].angular += bodies[i]->GetAngularVelocity() / dt;
   }
 
   // apply impulse from stored solution values (don't have currently so skip)
@@ -63,10 +69,13 @@ void ContactResolver::ResolveContact(Contact& contact, float dt)
     // evaluate delta lambda and add it to lambda
     float jImpulse;
     Jacobian::Pair impulse[2];
-    // impulse[0] = bodies[0]->GetImpulse();
-    // impulse[1] = bodies[1]->GetImpulse();
+    for (unsigned i = 0; i < 2; ++i)
+    {
+      impulse[i].linear = bodies[i]->GetLinearImpulse();
+      impulse[i].angular = bodies[i]->GetAngularImpulse();
+    }
     // jacobian.transform(jImpulse, impulse[0], impulse[1]);
-    delta_lambda = (eta - jImpulse);// *mass;
+    delta_lambda = (eta - jImpulse) * effectiveMass;
     float old_lambda; // = lambda;
     // lambda += delta_lambda;
     // clamp lambda
