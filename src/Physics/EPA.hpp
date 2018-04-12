@@ -5,5 +5,5 @@
 
 namespace EPA
 {
-  void Expand(const SupportShape& shapeA, const SupportShape& shapeB, Polytope& polytope, unsigned maxIter = 50, float epsilon = 0.001f);
+  void Expand(const SupportShape& shapeA, const SupportShape& shapeB, Polytope& polytope, unsigned maxIter = 20, float epsilon = 0.001f);
 }
