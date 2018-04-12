@@ -64,8 +64,11 @@ void ContactResolver::ResolveContact(Contact& contact, float dt)
   // jacobian.transform(externalAccel, a[0], a[1]);
   float eta = -externalAccel;// -(bias / dt);
 
+  float lambda = 0.0f;
   float delta_lambda;
   // solve the normal constraint
+  unsigned iter = 0;
+  while (iter < 50) {
     // evaluate delta lambda and add it to lambda
     float jImpulse;
     Jacobian::Pair impulse[2];
@@ -76,15 +79,20 @@ void ContactResolver::ResolveContact(Contact& contact, float dt)
     }
     // jacobian.transform(jImpulse, impulse[0], impulse[1]);
     delta_lambda = (eta - jImpulse) * effectiveMass;
-    float old_lambda; // = lambda;
-    // lambda += delta_lambda;
-    // clamp lambda
-    delta_lambda;// = lambda - old_lambda;
+    float old_lambda = lambda;
+    lambda += delta_lambda;
+    if (lambda < 0.0f) lambda = 0.0f;
+    delta_lambda = lambda - old_lambda;
     // when delta lambda is small or we hit max iter, apply impulse
-    if (delta_lambda == 0.0f)
+    if (delta_lambda != 0.0f)
     {
-      // apply impulse and bail
+      // apply impulse
     }
+    else
+    {
+      break;
+    }
+  }
 
   // if we want friction here, repeat process but jacobian uses tangent vecs t1 and t2
 }
