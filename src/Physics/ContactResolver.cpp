@@ -18,15 +18,16 @@ void ContactResolver::ResolveContact(Contact & contact)
 
   // get the mass matrix / inertia tensor thing M
 
-  /*
-  contact.bodies[0]->GetMassInverse();
-  contact.bodies[0]->GetInertiaTensorInverse();
+  float massInv[2];
+  glm::mat3 tensorInv[2];
 
-  contact.bodies[1]->GetMassInverse();
-  contact.bodies[1]->GetInertiaTensorInverse();
+  for (unsigned i = 0; i < 2; ++i)
+  {
+    massInv[i] = contact.bodies[i]->GetMassInverse();
+    tensorInv[i] = contact.bodies[i]->GetInertiaTensorInverse();
+  }
 
   // store these and compute stuff
-  */
 
   // get the bias value b
   float bias = 0.0f;
