@@ -3,6 +3,25 @@
 
 namespace ContactResolver
 {
+  void Jacobian::Transform(float& lambda, const Pair v[2]) const
+  {
+    lambda = 0.0f;
+    for (unsigned i = 0; i < 2; ++i)
+    {
+      lambda += glm::dot(v[i].linear, pairs[i].linear)
+        + dot(v[i].angular, pairs[i].angular);
+    }
+  }
+
+  void Jacobian::Transform(Pair v[2], float lambda) const
+  {
+    for (unsigned i = 0; i < 2; ++i)
+    {
+      v[i].linear = pairs[i].linear * lambda;
+      v[i].angular = pairs[i].angular * lambda;
+    }
+  }
+
   void ResolveContact(Contact& contact, float dt)
   {
     // make sure penetration is valid and then cross normals with world pos points
@@ -41,7 +60,7 @@ namespace ContactResolver
       velocity[i].linear = bodies[i]->GetLinearVelocity();
       velocity[i].angular = bodies[i]->GetAngularVelocity();
     }
-    jacobian.transform(vRel, velocity);
+    jacobian.Transform(vRel, velocity);
     float restitution = 0.0f;
     float baumgarte = 0.5f;
     if (vRel < 0.0f)
@@ -65,7 +84,7 @@ namespace ContactResolver
 
     // determine target impulse
     float externalAccel;
-     jacobian.transform(externalAccel, a);
+     jacobian.Transform(externalAccel, a);
     float eta = -externalAccel - (bias / dt);
 
     float lambda = 0.0f;
@@ -82,7 +101,7 @@ namespace ContactResolver
         impulse[i].linear = bodies[i]->GetLinearImpulse();
         impulse[i].angular = bodies[i]->GetAngularImpulse();
       }
-      jacobian.transform(jImpulse, impulse);
+      jacobian.Transform(jImpulse, impulse);
       delta_lambda = (eta - jImpulse) * effectiveMass;
       float old_lambda = lambda;
       lambda += delta_lambda;
@@ -91,7 +110,7 @@ namespace ContactResolver
       // when delta lambda is small or we hit max iter, apply impulse
       if (delta_lambda != 0.0f)
       {
-        // apply impulse
+        ApplyImpulses(contact, delta_lambda, tensorInv, massInv, jacobian);
       }
       else
       {
@@ -102,17 +121,14 @@ namespace ContactResolver
     // if we want friction here, repeat process but jacobian uses tangent vecs t1 and t2
   }
 
-  // apply impulse
-    // jacobian.transform(delta_impulse, delta_lambda)
-    // bodies[i]->add_impulse(mass_matrix_inv[i] * delta_impulse[i]);
-  
-  void Jacobian::transform(float & lambda, const Pair v[2]) const
+  void ApplyImpulses(Contact & contact, float delta_lambda, glm::mat3 tensorInv[2], float massInv[2], const Jacobian & jacobian)
   {
-    lambda = 0.0f;
+    Jacobian::Pair deltaImpulse[2];
+    jacobian.Transform(deltaImpulse, delta_lambda);
     for (unsigned i = 0; i < 2; ++i)
     {
-      lambda += glm::dot(v[i].linear, pairs[i].linear)
-        + dot(v[i].angular, pairs[i].angular);
+      contact.bodies[i]->ApplyLinearImpulse(massInv[i] * deltaImpulse[i].linear);
+      contact.bodies[i]->ApplyAngularImpulse(tensorInv[i] * deltaImpulse[i].angular);
     }
   }
 }
