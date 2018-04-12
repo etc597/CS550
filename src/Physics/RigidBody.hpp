@@ -93,6 +93,9 @@ private:
   glm::vec3 force;
   glm::vec3 torque;
 
+  glm::vec3 linearImpulse;
+  glm::vec3 angularImpulse;
+
   float mass;
 
   glm::vec3 deltaX;

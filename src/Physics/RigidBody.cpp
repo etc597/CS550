@@ -133,10 +133,12 @@ void RigidBody::ApplyTorque(glm::vec3 torque)
 
 void RigidBody::ApplyLinearImpulse(glm::vec3 impulse)
 {
+  linearImpulse += impulse;
 }
 
 void RigidBody::ApplyAngularImpulse(glm::vec3 impulse)
 {
+  angularImpulse += impulse;
 }
 
 void RigidBody::SetState(const RigidBodyData & data)
@@ -234,12 +236,12 @@ glm::vec3 RigidBody::GetTorques()
 
 glm::vec3 RigidBody::GetLinearImpulse()
 {
-  return glm::vec3();
+  return linearImpulse;
 }
 
 glm::vec3 RigidBody::GetAngularImpulse()
 {
-  return glm::vec3();
+  return angularImpulse;
 }
 
 
