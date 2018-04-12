@@ -22,6 +22,16 @@ namespace ContactResolver
     }
   }
 
+  void Jacobian::CalculateEffectiveMassInverse(float& effectiveMassInv, float massInv[2], glm::mat3 tensorInv[2])
+  {
+    effectiveMassInv = 0.0f;
+    for (unsigned i = 0; i < 2; ++i)
+    {
+      effectiveMassInv += glm::dot(pairs[i].linear, massInv[i] * pairs[i].linear)
+        + glm::dot(pairs[i].angular, tensorInv[i] * pairs[i].angular);
+    }
+  }
+
   void ResolveContact(Contact& contact, float dt)
   {
     // make sure penetration is valid and then cross normals with world pos points
@@ -47,7 +57,8 @@ namespace ContactResolver
       massInv[i] = contact.bodies[i]->GetMassInverse();
       tensorInv[i] = contact.bodies[i]->GetInertiaTensorInverse();
     }
-    float effectiveMassInv;// = jacobian.effectiveMass(massInv, tensorInv);
+    float effectiveMassInv;
+    jacobian.CalculateEffectiveMassInverse(effectiveMassInv, massInv, tensorInv);
     float effectiveMass = effectiveMassInv != 0.0f ? 1.0f / effectiveMassInv : 0.0f;
 
     auto& bodies = contact.bodies;
