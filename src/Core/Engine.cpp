@@ -55,9 +55,10 @@ bool Engine::Init()
     obj.mModelName = "cube";
     obj.mColor = glm::vec3(0.5f + 0.5f * (1.0f / NUM_SPHERES * i), 1.0f / NUM_SPHERES * i, 1.0f - (1.0f / NUM_SPHERES * i));
 
-    data.x = glm::vec3(10 * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, 10 * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
-    data.P = - 0.25f * data.x;
+    data.x = glm::vec3(NUM_SPHERES * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, NUM_SPHERES * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
+    data.P = -data.x;
     data.P.y = 0;
+    data.P = 2.5f * glm::normalize(data.P);
     data.mass = 1.0f;
 
     if (!CreateObject(obj, data)) {
