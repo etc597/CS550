@@ -27,7 +27,7 @@ public:
 
 private:
   void InternalUpdate(float dt);
-  void ResolveContacts();
+  void ResolveContacts(float dt);
   void DebugDrawBroadPhase();
 
   Engine * mEngine;

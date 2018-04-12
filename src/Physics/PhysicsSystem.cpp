@@ -115,14 +115,14 @@ void PhysicsSystem::InternalUpdate(float dt)
   mManifold = manifold;
 
   // resolve contacts (probably thread this too once you do that)
-  ResolveContacts();
+  ResolveContacts(dt);
 }
 
-void PhysicsSystem::ResolveContacts()
+void PhysicsSystem::ResolveContacts(float dt)
 {
   for (auto& contact : mManifold)
   {
-    ContactResolver::ResolveContact(contact);
+    ContactResolver::ResolveContact(contact, dt);
   }
 }
 

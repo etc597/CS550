@@ -3,7 +3,7 @@
 
 namespace ContactResolver
 {
-  void ResolveContact(Contact& contact);
+  void ResolveContact(Contact& contact, float dt);
 
   struct Jacobian
   {

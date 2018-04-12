@@ -1,7 +1,7 @@
 #include "ContactResolver.hpp"
 #include <algorithm>
 
-void ContactResolver::ResolveContact(Contact & contact)
+void ContactResolver::ResolveContact(Contact& contact, float dt)
 {
   // make sure penetration is valid and then cross normals with world pos points
   float penetration = contact.depth;
@@ -26,8 +26,8 @@ void ContactResolver::ResolveContact(Contact & contact)
     massInv[i] = contact.bodies[i]->GetMassInverse();
     tensorInv[i] = contact.bodies[i]->GetInertiaTensorInverse();
   }
-
-  // store these and compute stuff
+  float effectiveMassInv;// = jacobian.effectiveMass(massInv, tensorInv);
+  float effectiveMass = effectiveMassInv != 0.0f ? 1.0f / effectiveMassInv : 0.0f;
 
   // get the bias value b
   float bias = 0.0f;
