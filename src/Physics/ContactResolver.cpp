@@ -127,6 +127,7 @@ namespace ContactResolver
       {
         break;
       }
+      ++iter;
     }
 
     // if we want friction here, repeat process but jacobian uses tangent vecs t1 and t2
