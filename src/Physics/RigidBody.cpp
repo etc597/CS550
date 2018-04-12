@@ -40,7 +40,7 @@ RigidBody::RigidBody(const RigidBodyData & data)
 
 bool RigidBody::Init(Object * object)
 {
-  Ibody = glm::mat4(0);
+  IbodyInv = glm::mat4(0);
   mObject = object;
   mEngine = object->mEngine;
   mModel = object->mModel;
@@ -51,15 +51,15 @@ bool RigidBody::Init(Object * object)
 
   for (auto& vertex : mModel->mMeshes.front().mVertices) {
     glm::vec3 r = vertex.mPos;// -cm;
-    Ibody[0][0] += r.y * r.y + r.z * r.z;
-    Ibody[1][1] += r.x * r.x + r.z * r.z;
-    Ibody[2][2] += r.x * r.x + r.y * r.y;
-    Ibody[0][1] = (Ibody[1][0] += -r.x * r.y);
-    Ibody[0][2] = (Ibody[2][0] += -r.x * r.z);
-    Ibody[1][2] = (Ibody[2][1] += -r.y * r.z);
+    IbodyInv[0][0] += r.y * r.y + r.z * r.z;
+    IbodyInv[1][1] += r.x * r.x + r.z * r.z;
+    IbodyInv[2][2] += r.x * r.x + r.y * r.y;
+    IbodyInv[0][1] = (IbodyInv[1][0] += -r.x * r.y);
+    IbodyInv[0][2] = (IbodyInv[2][0] += -r.x * r.z);
+    IbodyInv[1][2] = (IbodyInv[2][1] += -r.y * r.z);
   }
-  Ibody *= mass;
-  Ibody = glm::inverse(Ibody);
+  IbodyInv *= mass;
+  IbodyInv = glm::inverse(IbodyInv);
   Update(0);
   deltaQ = q;
   deltaX = x;
@@ -79,7 +79,7 @@ void RigidBody::Update(float dt)
   }
   lastModel = GetModelMatrix();
   glm::mat3 R(glm::normalize(q)); // orientation matrix
-  glm::mat3 Iinv = R * Ibody * glm::transpose(R);
+  glm::mat3 Iinv = R * IbodyInv * glm::transpose(R);
 
   force = glm::vec3(0);
   torque = glm::vec3(0);
@@ -131,6 +131,14 @@ void RigidBody::ApplyTorque(glm::vec3 torque)
   mAppliedTorques.push_back(torque);
 }
 
+void RigidBody::ApplyLinearImpulse(glm::vec3 impulse)
+{
+}
+
+void RigidBody::ApplyAngularImpulse(glm::vec3 impulse)
+{
+}
+
 void RigidBody::SetState(const RigidBodyData & data)
 {
   lastModel = GetModelMatrix();
@@ -148,7 +156,7 @@ void RigidBody::SetState(const RigidBodyData & data)
   mass = data.mass;
 
   glm::mat3 R(glm::normalize(q));
-  glm::mat3 I = R * Ibody * glm::transpose(R);
+  glm::mat3 I = R * IbodyInv * glm::transpose(R);
   glm::mat3 Iinv = glm::inverse(I);
 
   v = P / mass;
@@ -190,6 +198,48 @@ glm::vec3 RigidBody::GetPos()
 glm::mat4 RigidBody::GetDeltaMatrix()
 {
   return GetModelMatrix() * glm::inverse(lastModel);
+}
+
+float RigidBody::GetMassInverse()
+{
+  return mass != 0.0f ? 1.0f / mass : 0.0f;
+}
+
+glm::mat3 RigidBody::GetInertiaTensorInverse()
+{
+  glm::mat3 R(glm::normalize(q)); // orientation matrix
+  glm::mat3 Iinv = R * IbodyInv * glm::transpose(R);
+  return Iinv;
+}
+
+glm::vec3 RigidBody::GetLinearVelocity()
+{
+  return v;
+}
+
+glm::vec3 RigidBody::GetAngularVelocity()
+{
+  return w;
+}
+
+glm::vec3 RigidBody::GetForces()
+{
+  return force;
+}
+
+glm::vec3 RigidBody::GetTorques()
+{
+  return torque;
+}
+
+glm::vec3 RigidBody::GetLinearImpulse()
+{
+  return glm::vec3();
+}
+
+glm::vec3 RigidBody::GetAngularImpulse()
+{
+  return glm::vec3();
 }
 
 

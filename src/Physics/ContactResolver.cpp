@@ -19,11 +19,11 @@ void ContactResolver::ResolveContact(Contact & contact)
   // get the mass matrix / inertia tensor thing M
 
   /*
-  contact.bodies[0]->GetMass();
-  contact.bodies[0]->GetInertiaTensor();
+  contact.bodies[0]->GetMassInverse();
+  contact.bodies[0]->GetInertiaTensorInverse();
 
-  contact.bodies[1]->GetMass();
-  contact.bodies[1]->GetInertiaTensor();
+  contact.bodies[1]->GetMassInverse();
+  contact.bodies[1]->GetInertiaTensorInverse();
 
   // store these and compute stuff
   */
@@ -46,6 +46,7 @@ void ContactResolver::ResolveContact(Contact & contact)
   for (unsigned i = 0; i < 2; ++i)
   {
     // a[i] = mass_matrix_inv[i] * bodies[i]->GetForces();
+    // something something bodies[i]->GetTorques();
     // a[i] += bodies[i]->GetVelocity() / dt;
   }
 
@@ -74,6 +75,8 @@ void ContactResolver::ResolveContact(Contact & contact)
     {
       // apply impulse and bail
     }
+
+  // if we want friction here, repeat process but jacobian uses tangent vecs t1 and t2
 }
 
 // apply impulse

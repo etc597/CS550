@@ -53,11 +53,21 @@ public:
   void ApplyForce(glm::vec3 force, glm::vec3 pos);
   void ApplyForce(glm::vec3 force);
   void ApplyTorque(glm::vec3 torque);
+  void ApplyLinearImpulse(glm::vec3 impulse);
+  void ApplyAngularImpulse(glm::vec3 impulse);
   void SetState(const RigidBodyData& data);
   RigidBodyData GetState();
   glm::mat4 GetModelMatrix();
   glm::vec3 GetPos();
   glm::mat4 GetDeltaMatrix();
+  float GetMassInverse();
+  glm::mat3 GetInertiaTensorInverse();
+  glm::vec3 GetLinearVelocity();
+  glm::vec3 GetAngularVelocity();
+  glm::vec3 GetForces();
+  glm::vec3 GetTorques();
+  glm::vec3 GetLinearImpulse();
+  glm::vec3 GetAngularImpulse();
 private:
   Object * mObject;
   Engine * mEngine;
@@ -67,7 +77,7 @@ private:
   std::vector<glm::vec3> mAppliedTorques;
 
   glm::vec3 cm;
-  glm::mat3 Ibody;
+  glm::mat3 IbodyInv;
   glm::mat4 lastModel;
 
   glm::vec3 x; // position
