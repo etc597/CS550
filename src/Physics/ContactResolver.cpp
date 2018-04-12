@@ -72,7 +72,7 @@ namespace ContactResolver
       velocity[i].angular = bodies[i]->GetAngularVelocity();
     }
     jacobian.Transform(vRel, velocity);
-    float restitution = 0.0f;
+    float restitution = 0.1f;
     float baumgarte = 0.5f;
     if (vRel < 0.0f)
     {

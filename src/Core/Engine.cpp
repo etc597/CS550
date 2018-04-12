@@ -2,6 +2,7 @@
 #include "Editor/EditorSystem.hpp"
 
 #include <iostream>
+#include <sstream>
 
 Engine::Engine(int argc, char * argv[])
   : mState(State::Play)
@@ -32,30 +33,40 @@ bool Engine::Init()
   ObjectData obj;
   RigidBodyData data;
 
-  obj.mName = "Cube";
-  obj.mModelName = "cube";
-  obj.mColor = glm::vec3(0.1f, 0.1f, 0.7f);
-
-  data.x = glm::vec3(0, 0, -0.5f);
-  data.mass = 1.0f;
-
-  if (!CreateObject(obj, data)) {
-    std::cout << "Failed to create cube object, aborting" << std::endl;
-    return false;
-  }
-
   obj.mName = "Sphere";
   obj.mModelName = "sphere";
   obj.mColor = glm::vec3(0.1f, 0.7f, 0.1f);
-  
-  data.x = glm::vec3(-1.6, 0.3f, -1.0f);
+
+  data.x = glm::vec3(0, 0, -0.5f);
   data.mass = 2.0f;
-  
+
   if (!CreateObject(obj, data)) {
     std::cout << "Failed to create cube object, aborting" << std::endl;
     return false;
   }
+
+  const int NUM_SPHERES = 10;
+  for (unsigned i = 0; i < NUM_SPHERES; ++i)
+  {
+    data = RigidBodyData();
+    std::stringstream stream;
+    stream << "Cube" << i;
+    obj.mName = stream.str();
+    obj.mModelName = "cube";
+    obj.mColor = glm::vec3(0.5f + 0.5f * (1.0f / NUM_SPHERES * i), 1.0f / NUM_SPHERES * i, 1.0f - (1.0f / NUM_SPHERES * i));
+
+    data.x = glm::vec3(10 * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, 10 * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
+    data.P = - 0.5f * data.x;
+    data.P.y = 0;
+    data.mass = 1.0f;
+
+    if (!CreateObject(obj, data)) {
+      std::cout << "Failed to create " << obj.mName << ", aborting" << std::endl;
+      return false;
+    }
+  }
   
+  data = RigidBodyData();
   obj.mName = "Cylinder";
   obj.mModelName = "cylinder";
   obj.mColor = glm::vec3(0.1f, 0.4f, 0.4f);
