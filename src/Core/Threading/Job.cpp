@@ -1,7 +1,7 @@
 #include "Core/Threading/Job.hpp"
 #include "Core/Threading/JobHandle.hpp"
 
-Job::Job(std::function<void*(*)(JobHandle&)>&& aDelegate)
+Job::Job(std::function<void*(JobHandle&)>&& aDelegate)
   : mParentJob(nullptr)
   , mDelegate(std::move(aDelegate))
   , mReturn()
@@ -12,7 +12,7 @@ Job::Job(std::function<void*(*)(JobHandle&)>&& aDelegate)
   IncrementJobs();
 }
 
-Job::Job(std::function<void*(*)(JobHandle&)>&& aDelegate, JobHandle& aParentHandle)
+Job::Job(std::function<void*(JobHandle&)>&& aDelegate, JobHandle& aParentHandle)
   : mParentJob(aParentHandle.GetJob())
   , mDelegate(std::move(aDelegate))
   , mReturn()

@@ -1,7 +1,5 @@
 #pragma once
-
-#include "Core/Threading/Job.hpp"
-
+#include <memory>
 
 class JobHandle
 {

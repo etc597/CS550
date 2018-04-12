@@ -19,6 +19,8 @@ bool Engine::Init()
 {
   mObjects.reserve(1000); //TODO: Remove this hack and just use uniques
 
+  mJobSystem.Initialize();
+
   if (!mGraphics.Init(new EditorSystem(this))) {
     return false;
   }
@@ -67,6 +69,7 @@ bool Engine::Init()
   }
 
   Cache();
+
 
   return true;
 }
@@ -145,6 +148,11 @@ PhysicsSystem * Engine::GetPhysicsSystem()
   return &mPhysics;
 }
 
+JobSystem * Engine::GetJobSystem()
+{
+  return &mJobSystem;
+}
+
 void Engine::Update()
 {
   float dt = mGraphics.Update();
@@ -166,6 +174,8 @@ void Engine::Update()
     Quit();
     break;
   }
+
+  mJobSystem.Update();
 }
 
 void Engine::Cache()

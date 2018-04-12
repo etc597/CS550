@@ -73,45 +73,68 @@ void PhysicsSystem::Deinit()
 
 void PhysicsSystem::InternalUpdate(float dt)
 {
+  auto jobSystem = mEngine->GetJobSystem();
   // TODO(Evan): multi thread body and col updates (can do both per job)
+  std::vector<JobHandle> handles;
+  handles.reserve(mBodies.size());
   for (auto& body : mBodies) {
-    body.second.Update(dt);
+    auto handle = jobSystem->QueueJobThisThread([&body, dt](JobHandle& handle)->void* {
+      body.second.Update(dt);
+      body.first->mCollider->Update(dt);
+      return nullptr;
+    });
+    handles.push_back(handle);
+  }
+
+  while (!handles.empty()) {
+    jobSystem->WaitThisThread(handles.back());
+    handles.pop_back();
   }
 
   for (auto& col : mColliders) {
-    col.second.Update(dt);
     mBroadPhase.UpdateData(col.second.mKey, &col.second);
   }
 
   mBroadPhase.SelfQuery(mResults);
+  handles.reserve(mResults.size());
   std::vector<Contact> manifold;
+  manifold.reserve(mResults.size());
+  std::mutex manifoldLock;
   // TODO(Evan): multi-thread collision detection and contact manifold stuff
   // don't forget to make adding to the manifold thread safe!
   for (auto& result : mResults)
   {
-    Simplex simplexResult;
-    auto shapeA = result.mDataPair.first->GetCollisionShape();
-    auto shapeB = result.mDataPair.second->GetCollisionShape();
+    auto handle = jobSystem->QueueJobThisThread([&result, &manifold, &manifoldLock](JobHandle& handle)->void* {
+      Simplex simplexResult;
+      auto shapeA = result.mDataPair.first->GetCollisionShape();
+      auto shapeB = result.mDataPair.second->GetCollisionShape();
 
-    auto res = GJK::Intersect(shapeA, shapeB, simplexResult);
-    
-    // generate contact information
-    if (res)
-    {
-      Polytope polytope(simplexResult);
-      EPA::Expand(shapeA, shapeB, polytope);
+      auto res = GJK::Intersect(shapeA, shapeB, simplexResult);
 
-      // probably need to be doing more than this
-      Contact contactData;
-      contactData.bodies[0] = result.mDataPair.first->mObject->mRigidBody;
-      contactData.bodies[1] = result.mDataPair.second->mObject->mRigidBody;
-      CreateContact(polytope, contactData);
-      manifold.push_back(contactData);
-      //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.point, contactData.point + 0.5f * contactData.normal, glm::vec3(1, 0, 0.0f), true);
-      //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[0].point, contactData.contacts[0].point + 0.5f * contactData.contacts[0].normal, glm::vec3(1, 0, 0.0f), true);
-      //mEngine->GetGraphicsSystem()->DebugDrawLine(contactData.contacts[1].point, contactData.contacts[1].point + 0.5f * contactData.contacts[1].normal, glm::vec3(0, 1, 0.0f), true);
-    }
+      // generate contact information
+      if (res)
+      {
+        Polytope polytope(simplexResult);
+        EPA::Expand(shapeA, shapeB, polytope);
+
+        // probably need to be doing more than this
+        Contact contactData;
+        contactData.bodies[0] = result.mDataPair.first->mObject->mRigidBody;
+        contactData.bodies[1] = result.mDataPair.second->mObject->mRigidBody;
+        CreateContact(polytope, contactData);
+        std::lock_guard<std::mutex> guard(manifoldLock);
+        manifold.push_back(contactData);
+      }
+      return nullptr;
+    });
+    handles.push_back(handle);
   }
+
+  while (!handles.empty()) {
+    jobSystem->WaitThisThread(handles.back());
+    handles.pop_back();
+  }
+
   mManifold = manifold;
 
   // resolve contacts (probably thread this too once you do that)

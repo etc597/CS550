@@ -1,4 +1,5 @@
 #include "JobHandle.hpp"
+#include "Job.hpp"
 
 JobHandle::JobHandle(Job * aJob)
   : mJob(aJob)

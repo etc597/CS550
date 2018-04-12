@@ -4,6 +4,7 @@
 #include "Graphics/GraphicsSystem.hpp"
 #include "Physics/PhysicsSystem.hpp"
 #include "Core/Object.hpp"
+#include "Core/Threading/JobSystem.hpp"
 
 #include <stack>
 
@@ -33,6 +34,7 @@ public:
 
   GraphicsSystem* GetGraphicsSystem();
   PhysicsSystem* GetPhysicsSystem();
+  JobSystem* GetJobSystem();
 private:
   enum class State
   {
@@ -50,6 +52,7 @@ private:
   State mState;
   GraphicsSystem mGraphics;
   PhysicsSystem mPhysics;
+  JobSystem mJobSystem;
   std::vector<Object> mObjects;
   std::stack<FrameData> mFrameData;
   bool mShouldQuit;
