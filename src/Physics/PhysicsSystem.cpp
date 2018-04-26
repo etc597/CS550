@@ -195,10 +195,10 @@ void PhysicsSystem::DebugDrawBroadPhase()
       return false;
     });
     if (it != mResults.end()) {
-      mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb, glm::vec3(1, 0, 0));
+      mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb, glm::vec3(1, 0, 0), true);
     }
     else {
-      mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb);
+      mEngine->GetGraphicsSystem()->DebugDrawAABB(aabb, glm::vec3(1,1,1), true);
     }
   };
 

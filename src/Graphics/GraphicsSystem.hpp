@@ -32,7 +32,7 @@ public:
   bool GetDebug();
   void SetDebug(bool val);
   void DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, glm::vec3 color = glm::vec3(1, 1, 1), bool force = false);
-  void DebugDrawAABB(const AABB& aabb, glm::vec3 color = glm::vec3(1,1,1));
+  void DebugDrawAABB(const AABB& aabb, glm::vec3 color = glm::vec3(1,1,1), bool force = false);
 private:
   bool DebugInit();
   void ProcessInput(GLFWwindow * window, float dt);

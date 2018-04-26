@@ -43,7 +43,7 @@ GraphicsSystem::GraphicsSystem(Engine * engine)
   , mScreenHeight(600)
   , mLastFrame(0)
   , mShaders()
-  , mDebug(true)
+  , mDebug(false)
 {
 }
 
@@ -248,7 +248,7 @@ void GraphicsSystem::DebugDrawLine(const glm::vec3& p1, const glm::vec3& p2, glm
   }
 }
 
-void GraphicsSystem::DebugDrawAABB(const AABB& aabb, glm::vec3 color /*= glm::vec3(1,1,1)*/)
+void GraphicsSystem::DebugDrawAABB(const AABB& aabb, glm::vec3 color /*= glm::vec3(1,1,1)*/, bool force /*= false*/)
 {
   glm::vec3 extents = aabb.GetHalfExtents();
   auto width = glm::vec3(extents.x * 2, 0, 0);
@@ -266,22 +266,22 @@ void GraphicsSystem::DebugDrawAABB(const AABB& aabb, glm::vec3 color /*= glm::ve
   points[7] = points[4] - depth;
   
 
-  DebugDrawLine(points[0], points[1], color);
-  DebugDrawLine(points[0], points[2], color);
-  DebugDrawLine(points[0], points[3], color);
+  DebugDrawLine(points[0], points[1], color, force);
+  DebugDrawLine(points[0], points[2], color, force);
+  DebugDrawLine(points[0], points[3], color, force);
 
-  DebugDrawLine(points[4], points[5], color);
-  DebugDrawLine(points[4], points[6], color);
-  DebugDrawLine(points[4], points[7], color);
+  DebugDrawLine(points[4], points[5], color, force);
+  DebugDrawLine(points[4], points[6], color, force);
+  DebugDrawLine(points[4], points[7], color, force);
 
-  DebugDrawLine(points[1], points[6], color);
-  DebugDrawLine(points[1], points[7], color);
+  DebugDrawLine(points[1], points[6], color, force);
+  DebugDrawLine(points[1], points[7], color, force);
 
-  DebugDrawLine(points[2], points[5], color);
-  DebugDrawLine(points[2], points[7], color);
+  DebugDrawLine(points[2], points[5], color, force);
+  DebugDrawLine(points[2], points[7], color, force);
 
-  DebugDrawLine(points[3], points[5], color);
-  DebugDrawLine(points[3], points[6], color);
+  DebugDrawLine(points[3], points[5], color, force);
+  DebugDrawLine(points[3], points[6], color, force);
 }
 
 bool GraphicsSystem::DebugInit()
