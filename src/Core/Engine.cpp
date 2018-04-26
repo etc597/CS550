@@ -45,8 +45,8 @@ bool Engine::Init()
     return false;
   }
 
-  const int NUM_SPHERES = 100;
-  float radius = 50;
+  const int NUM_SPHERES = 1000;
+  float radius = 275;
   for (unsigned i = 0; i < NUM_SPHERES; ++i)
   {
     data = RigidBodyData();
