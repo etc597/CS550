@@ -36,6 +36,7 @@ private:
   std::unordered_map<Object*, RigidBody> mBodies;
   std::unordered_map<Object*, Collider> mColliders;
   std::vector<Contact> mManifold;
+  std::vector<Contact> mPreviousCollisions;
 };
 
 #endif

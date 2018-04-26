@@ -76,12 +76,12 @@ namespace ContactResolver
     jacobian.Transform(vRel, velocity);
     float restitution = 0.1f;
     float baumgarte = 0.5f;
-    if (vRel > 0.0f)
+    if (vRel < 0.0f)
     {
-      bias += vRel * restitution;
+      bias += std::min(-vRel, 1.0f) * vRel * restitution;
     }
     // baumgarte stability
-    bias += penetration * baumgarte;
+    bias += std::min(-penetration, 0.0f) * baumgarte * massInv[0];
 
     // get the acceleration value (needs dt) - [J * v0 / dt] + [J * M-1 * Fext] 
     Jacobian::Pair a[2];
@@ -94,11 +94,12 @@ namespace ContactResolver
     }
 
     // apply impulse from stored solution values (don't have currently so skip)
+    ApplyImpulses(contact, contact.lambda, tensorInv, massInv, jacobian);
 
     // determine target impulse
     float externalAccel;
     jacobian.Transform(externalAccel, a);
-    float eta = -externalAccel + (bias / dt);
+    float eta = -externalAccel - (bias / dt);
 
     float lambda = 0.0f;
     float delta_lambda;
@@ -134,6 +135,7 @@ namespace ContactResolver
       }
       ++iter;
     }
+    contact.lambda = lambda;
 
     // friction is same, just jacobian with tangent and bitangent and then clamp to [-constant, +constant]
 

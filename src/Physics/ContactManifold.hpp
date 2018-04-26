@@ -19,6 +19,7 @@ struct Contact
   ContactPoint contacts[2];
   glm::vec3 point;
   glm::vec3 normal;
+  float lambda = 0.0f;
 };
 
 Contact CreateContact(const Polytope& polytope);

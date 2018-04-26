@@ -145,7 +145,28 @@ void PhysicsSystem::ResolveContacts(float dt)
 {
   for (auto& contact : mManifold)
   {
+    auto pair = std::make_pair(contact.bodies[0], contact.bodies[1]);
+    auto it = std::find_if(mPreviousCollisions.begin(), mPreviousCollisions.end(), [contact](const Contact& it)->bool {
+      if (contact.bodies[0] == it.bodies[0] && contact.bodies[1] == it.bodies[1])
+      {
+        return true;
+      }
+
+      if (contact.bodies[0] == it.bodies[1] && contact.bodies[1] == it.bodies[0])
+      {
+        return true;
+      }
+      return false;
+    });
+
+    if (it != mPreviousCollisions.end())
+    {
+      contact.lambda = it->lambda;
+      mPreviousCollisions.erase(it);
+    }
+
     ContactResolver::ResolveContact(contact, dt);
+    mPreviousCollisions.push_back(contact);
   }
 }
 
