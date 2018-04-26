@@ -58,8 +58,8 @@ bool PhysicsSystem::Init()
 
 void PhysicsSystem::Update(float dt)
 {
-  const float fixedStep = (1.0f / 144.0f);
-  while (dt > 0)
+  const float fixedStep = (1.0f / 120.0f);
+  while(dt > 0)
   {
     InternalUpdate(fixedStep);
     dt -= fixedStep;

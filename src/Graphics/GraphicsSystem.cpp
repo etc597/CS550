@@ -99,6 +99,17 @@ bool GraphicsSystem::Init(EditorSystem * editor)
     return false;
   }
 
+  mCamera.mPosition = glm::vec3(5, 20, 30);
+  mCamera.mYaw = -100;
+  mCamera.mPitch = -40;
+  glm::vec3 front;
+  front.x = cos(glm::radians(mCamera.mPitch)) * cos(glm::radians(mCamera.mYaw));
+  front.y = sin(glm::radians(mCamera.mPitch));
+  front.z = cos(glm::radians(mCamera.mPitch)) * sin(glm::radians(mCamera.mYaw));
+  mCamera.mCameraFront = glm::normalize(front);
+  mCamera.mCameraRight = glm::normalize(glm::cross(mCamera.mWorldUp, mCamera.mCameraFront));
+  mCamera.mCameraUp = glm::cross(mCamera.mCameraFront, mCamera.mCameraRight);
+
   return true;
 }
 
@@ -107,8 +118,8 @@ float GraphicsSystem::Update()
   float currentFrame = (float)glfwGetTime();
   float dt = (currentFrame - mLastFrame);
 
-  if (dt > 0.5f) {
-    dt = 0.5f;
+  if (dt > (1.0f / 30.0f)) {
+    dt = (1.0f / 30.0f);
   }
 
   ProcessInput(mWindow, dt);
@@ -330,7 +341,7 @@ void GraphicsSystem::Draw()
   mShaders[0].SetMat4("view", view);
 
   glm::mat4 projection;
-  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 10000.0f);
   mShaders[0].SetMat4("projection", projection);
 
   auto objects = mEngine->GetObjects();

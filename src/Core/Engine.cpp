@@ -18,7 +18,7 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
-  mObjects.reserve(1000); //TODO: Remove this hack and just use uniques
+  mObjects.reserve(100000); //TODO: Remove this hack and just use uniques
 
   mJobSystem.Initialize();
 
@@ -46,6 +46,7 @@ bool Engine::Init()
   }
 
   const int NUM_SPHERES = 100;
+  float radius = 50;
   for (unsigned i = 0; i < NUM_SPHERES; ++i)
   {
     data = RigidBodyData();
@@ -55,10 +56,10 @@ bool Engine::Init()
     obj.mModelName = "cube";
     obj.mColor = glm::vec3(0.5f + 0.5f * (1.0f / NUM_SPHERES * i), 1.0f / NUM_SPHERES * i, 1.0f - (1.0f / NUM_SPHERES * i));
 
-    data.x = glm::vec3(NUM_SPHERES * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, NUM_SPHERES * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
+    data.x = glm::vec3(radius * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, radius * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
     data.P = -data.x;
     data.P.y = 0;
-    data.P = 2.5f * glm::normalize(data.P);
+    data.P = 2.0f * glm::normalize(data.P);
     data.mass = 1.0f;
 
     if (!CreateObject(obj, data)) {
