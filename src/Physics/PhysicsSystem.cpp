@@ -162,12 +162,12 @@ void PhysicsSystem::ResolveContacts(float dt)
     if (it != mPreviousCollisions.end())
     {
       contact.lambda = it->lambda;
-      mPreviousCollisions.erase(it);
     }
 
     ContactResolver::ResolveContact(contact, dt);
-    mPreviousCollisions.push_back(contact);
   }
+
+  mPreviousCollisions = mManifold;
 }
 
 void PhysicsSystem::DebugDrawBroadPhase()
