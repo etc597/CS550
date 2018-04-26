@@ -37,8 +37,10 @@ namespace ContactResolver
     // make sure penetration is valid and then cross normals with world pos points
     float penetration = contact.depth;
     glm::vec3 n = contact.normal;
-    glm::vec3 axn = glm::cross(contact.contacts[0].point, n); // should be point - objPos
-    glm::vec3 bxn = glm::cross(contact.contacts[1].point, n); // should be point - objPos
+    auto bodyPos0 = contact.bodies[0]->GetPos();
+    auto bodyPos1 = contact.bodies[1]->GetPos();
+    glm::vec3 axn = glm::cross(contact.contacts[0].point - bodyPos0, n); // should be point - objPos
+    glm::vec3 bxn = glm::cross(contact.contacts[1].point - bodyPos1, n); // should be point - objPos
 
     // create the jacobian from the contact
     Jacobian jacobian;
