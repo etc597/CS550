@@ -378,7 +378,7 @@ void GraphicsSystem::DebugDraw()
   mShaders[1].SetMat4("view", view);
 
   glm::mat4 projection;
-  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(mCamera.mFov), static_cast<float>(mScreenWidth) / mScreenHeight, 0.1f, 10000.0f);
   mShaders[1].SetMat4("projection", projection);
 
   //glm::mat4 model ({ 1, 0, 0,
