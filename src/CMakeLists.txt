@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME} ${source_group} ${include_group})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
-target_link_libraries(${PROJECT_NAME} glm)
+target_link_libraries(${PROJECT_NAME} glm_static)
 target_link_libraries(${PROJECT_NAME} imgui)
 target_link_libraries(${PROJECT_NAME} glad)
 

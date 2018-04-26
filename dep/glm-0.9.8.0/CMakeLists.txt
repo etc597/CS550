@@ -161,7 +161,7 @@ add_subdirectory(glm)
 add_subdirectory(test)
 
 set(GLM_INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/glm")
-install(DIRECTORY glm DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# install(DIRECTORY glm DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/glmVersion.cmake"
@@ -185,12 +185,12 @@ configure_package_config_file(
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
-install(
-    FILES 
-        "${CMAKE_CURRENT_BINARY_DIR}/${GLM_INSTALL_CONFIGDIR}/glmConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/glmVersion.cmake"
-    DESTINATION ${GLM_INSTALL_CONFIGDIR}
-)
+# install(
+#    FILES 
+#        "${CMAKE_CURRENT_BINARY_DIR}/${GLM_INSTALL_CONFIGDIR}/glmConfig.cmake"
+#        "${CMAKE_CURRENT_BINARY_DIR}/glmVersion.cmake"
+#    DESTINATION ${GLM_INSTALL_CONFIGDIR}
+#)
 
 if (NOT CMAKE_VERSION VERSION_LESS "3.0")
     add_library(glm INTERFACE)
@@ -198,17 +198,17 @@ if (NOT CMAKE_VERSION VERSION_LESS "3.0")
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
-    install(TARGETS glm EXPORT glmTargets)
+    # install(TARGETS glm EXPORT glmTargets)
 
-    export(
-        EXPORT glmTargets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/glmTargets.cmake"
-    )
+    #export(
+    #    EXPORT glmTargets
+    #    FILE "${CMAKE_CURRENT_BINARY_DIR}/glmTargets.cmake"
+    #)
     
-    install(
-        EXPORT glmTargets FILE glmTargets.cmake
-        DESTINATION ${GLM_INSTALL_CONFIGDIR}
-    )
+    # install(
+    #    EXPORT glmTargets FILE glmTargets.cmake
+    #    DESTINATION ${GLM_INSTALL_CONFIGDIR}
+    #)
 endif()
 
 # build pkg-config file
@@ -219,9 +219,9 @@ configure_file(
 )
 
 # install pkg-config file
-install(
-    FILES "${CMAKE_CURRENT_BINARY_DIR}/glm.pc"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
-)
+# install(
+#    FILES "${CMAKE_CURRENT_BINARY_DIR}/glm.pc"
+#    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+#)
 
 export(PACKAGE glm)
