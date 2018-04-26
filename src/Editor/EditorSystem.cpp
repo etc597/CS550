@@ -70,6 +70,11 @@ void EditorSystem::DebugDrawCheckbox()
   ImGui::Checkbox("Debug Draw", &debug);
 
   mEngine->GetGraphicsSystem()->SetDebug(debug);
+
+  static bool bPhaseDebug = false;
+  ImGui::Checkbox("Draw Broad Phase", &bPhaseDebug);
+
+  mEngine->GetPhysicsSystem()->DebugDrawBroadPhase(bPhaseDebug);
 }
 
 void EditorSystem::ObjectEditor()

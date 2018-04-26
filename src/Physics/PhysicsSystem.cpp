@@ -10,6 +10,7 @@
 
 PhysicsSystem::PhysicsSystem(Engine * engine)
   : mEngine(engine)
+  , mDrawBPhase(false)
 {
 }
 
@@ -58,12 +59,21 @@ bool PhysicsSystem::Init()
 
 void PhysicsSystem::Update(float dt)
 {
+  if (dt < 0)
+  {
+    for (auto& col : mColliders) {
+      col.second.Update(0);
+      mBroadPhase.UpdateData(col.second.mKey, &col.second);
+    }
+  }
   const float fixedStep = (1.0f / 120.0f);
   while(dt > 0)
   {
     InternalUpdate(fixedStep);
     dt -= fixedStep;
   }
+
+  DebugDrawBroadPhase();
 }
 
 void PhysicsSystem::Deinit()
@@ -172,6 +182,11 @@ void PhysicsSystem::ResolveContacts(float dt)
 
 void PhysicsSystem::DebugDrawBroadPhase()
 {
+  if (!mDrawBPhase)
+  {
+    return;
+  }
+
   auto drawfn = [this](const AABB& aabb, unsigned key) {
     auto it = std::find_if(mResults.begin(), mResults.end(), [key](const QueryResult& pair) {
       if (pair.mKeyPair.first == key || pair.mKeyPair.second == key) {
@@ -188,4 +203,9 @@ void PhysicsSystem::DebugDrawBroadPhase()
   };
 
   mBroadPhase.DebugDraw(drawfn);
+}
+
+void PhysicsSystem::DebugDrawBroadPhase(bool setting)
+{
+  mDrawBPhase = setting;
 }

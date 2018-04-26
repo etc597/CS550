@@ -24,6 +24,7 @@ public:
   bool Init();
   void Update(float dt);
   void Deinit();
+  void DebugDrawBroadPhase(bool setting);
 
 private:
   void InternalUpdate(float dt);
@@ -37,6 +38,7 @@ private:
   std::unordered_map<Object*, Collider> mColliders;
   std::vector<Contact> mManifold;
   std::vector<Contact> mPreviousCollisions;
+  bool mDrawBPhase;
 };
 
 #endif

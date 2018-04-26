@@ -63,7 +63,7 @@ void AABBTree::DebugDraw(std::function<void(const AABB&, unsigned)> draw, int le
   if (level == -1) {
     for (auto& node : mNodes) {
       if (node.active) {
-        //draw(node.aabb, node.self);
+        draw(node.aabb, node.self);
       }
     }
   }
