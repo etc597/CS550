@@ -46,7 +46,7 @@ bool Engine::Init()
   }
 
   const int NUM_SPHERES = 1000;
-  float radius = 275;
+  float radius = 250;
   for (unsigned i = 0; i < NUM_SPHERES; ++i)
   {
     data = RigidBodyData();
@@ -59,7 +59,7 @@ bool Engine::Init()
     data.x = glm::vec3(radius * std::cos(2.0f * glm::pi<float>() / NUM_SPHERES * i), 0.3f, radius * std::sin(2.0f * glm::pi<float>() / NUM_SPHERES * i));
     data.P = -data.x;
     data.P.y = 0;
-    data.P = 2.0f * glm::normalize(data.P);
+    data.P = 5.0f * glm::normalize(data.P);
     data.mass = 1.0f;
 
     if (!CreateObject(obj, data)) {
