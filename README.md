@@ -2,7 +2,7 @@
 Physics Simulation
 
 # Contact Info
-email: evan.collier@digipen.edu
+email: etc597@gmail.com
 phone: 920-664-6224
 Feel free to contact for any questions you have
 
