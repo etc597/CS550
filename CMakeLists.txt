@@ -8,7 +8,7 @@ set(dep_root ${root}/dep)
 set(cmake_include ${root}/cmake)
 set(asset_path ${root}/assets)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES};Publish")
